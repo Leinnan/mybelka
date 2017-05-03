@@ -27,8 +27,8 @@ bool isDateLater(const la::Transaction& lhs, const la::Transaction& rhs){
 void la::Account::sortTransactions()
 {
     std::sort(std::begin(this->transactions),std::end(this->transactions),
-              [&](const la::Transaction& lhs, const la::Transaction& rhs){ lhs.getDate() < rhs.getDate();});
-                //isDateLater);
+              //[&](const la::Transaction& lhs, const la::Transaction& rhs){ lhs.getDate() < rhs.getDate();});
+                isDateLater);
 }
 
 void la::Account::updateAccountBalance()
@@ -43,6 +43,29 @@ void la::Account::updateAccountBalance()
             balance -= f_transaction.getAmount();
         }
     }
+}
+
+void la::Account::readFromJson(std::string m_path)
+{
+    QFile m_file(QString::fromStdString(m_path));
+    if (!m_file.open(QIODevice::ReadOnly | QIODevice::Text))
+            return;
+    QByteArray m_json_data = m_file.readAll();
+    QJsonParseError *m_err = new QJsonParseError();
+    QJsonDocument m_document = QJsonDocument::fromJson(m_json_data, m_err);
+    QJsonObject m_object = m_document.object();
+    QJsonArray m_json_array = m_object["transactions"].toArray();
+
+    for (const QJsonValue & m_value : m_json_array) {
+        QJsonObject obj = m_value.toObject();
+        la::Transaction m_transaction(obj["date"].toString().toStdString(),
+                                    obj["amount"].toInt(),
+                                    obj["title"].toString().toStdString());
+        this->transactions.push_back(m_transaction);
+    }
+
+    this->sortTransactions();
+
 }
 
 

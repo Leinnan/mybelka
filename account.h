@@ -4,6 +4,8 @@
 #include "category.h"
 #include <vector>
 #include <QDateTime>
+#include <QtCore>
+#include <string>
 
 namespace la {
 
@@ -16,6 +18,7 @@ public:
     void sortTransactions();
     void showAccountBalance();
     void updateAccountBalance();
+    void readFromJson(std::string);
 private:
     std::vector<la::Transaction> transactions;
     int balance = 0;
