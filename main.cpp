@@ -6,7 +6,7 @@
 int main(int argc, char *argv[]){
     la::Account test_account;
     la::Transaction tran_first(-299999,"Flat");
-    la::Transaction tran_second(20051,"Old laptop");
+    la::Transaction tran_second("02.05.2017 16:10",20051,"Old laptop");
     la::Transaction tran_third("21.09.2016 17:23",450000,"Job");
 
     test_account.addTransaction(tran_first);
@@ -15,5 +15,7 @@ int main(int argc, char *argv[]){
 
     test_account.showTransactions();
     test_account.showAccountBalance();
+    test_account.sortTransactions();
+    test_account.showTransactions();
     return 0;
 }

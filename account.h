@@ -13,6 +13,7 @@ public:
     Account();
     void showTransactions();
     void addTransaction(la::Transaction);
+    void sortTransactions();
     void showAccountBalance();
     void updateAccountBalance();
 private:

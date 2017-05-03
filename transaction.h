@@ -25,6 +25,7 @@ public:
     void display();
     bool isIncome(){return transaction_type == TransactionType::INCOME;}
     int getAmount(){return this->amount;}
+    QDateTime getDate() const;
 private:
     QDateTime date;
     TransactionType transaction_type;

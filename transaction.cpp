@@ -69,5 +69,10 @@ void Transaction::display()
               << '\n';
 }
 
+QDateTime Transaction::getDate() const
+{
+    return date;
+}
+
 
 }
