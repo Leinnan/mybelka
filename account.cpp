@@ -20,15 +20,10 @@ void la::Account::addTransaction(la::Transaction m_transaction)
     this->updateAccountBalance();
 }
 
-bool isDateLater(const la::Transaction& lhs, const la::Transaction& rhs){
-    return lhs.getDate() < rhs.getDate();
-}
-
 void la::Account::sortTransactions()
 {
     std::sort(std::begin(this->transactions),std::end(this->transactions),
               [&](const la::Transaction& lhs, const la::Transaction& rhs){ lhs.getDate() < rhs.getDate();});
-                //isDateLater);
 }
 
 void la::Account::updateAccountBalance()
