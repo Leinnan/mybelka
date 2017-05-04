@@ -63,6 +63,29 @@ void la::Account::readFromJson(std::string m_path)
 
 }
 
+void la::Account::saveToJson(std::string m_path)
+{
+    QFile m_file(QString::fromStdString(m_path));
+    if (!m_file.open(QFile::WriteOnly))
+            return;
+
+    QJsonObject m_root;//root object
+    QJsonArray m_transactions;//(2)
+
+
+    for(la::Transaction f_transaction : transactions){
+        QJsonObject obj;
+        obj["title"] = QString::fromStdString(f_transaction.getTitle());
+        obj["date"] = f_transaction.getDate().toString("dd.MM.yyyy hh:mm");
+        obj["amount"] = f_transaction.getAmount();
+
+        m_transactions.append(obj);
+    }
+
+    m_root["transactions"] = m_transactions;//(6)
+    m_file.write(QJsonDocument(m_root).toJson(QJsonDocument::Indented));
+
+}
 
 void la::Account::showAccountBalance()
 {

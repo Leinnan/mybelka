@@ -19,7 +19,9 @@ public:
     void showAccountBalance();
     void updateAccountBalance();
     void readFromJson(std::string);
+    void saveToJson(std::string);
 private:
+
     std::vector<la::Transaction> transactions;
     int balance = 0;
 

@@ -74,5 +74,15 @@ QDateTime Transaction::getDate() const
     return date;
 }
 
+std::string Transaction::getTitle() const
+{
+    return title;
+}
+
+void Transaction::setTitle(const std::string &value)
+{
+    title = value;
+}
+
 
 }

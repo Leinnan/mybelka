@@ -26,6 +26,9 @@ public:
     bool isIncome(){return transaction_type == TransactionType::INCOME;}
     int getAmount(){return this->amount;}
     QDateTime getDate() const;
+    std::string getTitle() const;
+    void setTitle(const std::string &value);
+
 private:
     QDateTime date;
     TransactionType transaction_type;
