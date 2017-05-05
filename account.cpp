@@ -60,7 +60,8 @@ void la::Account::readFromJson(std::string m_path)
     }
 
     this->sortTransactions();
-
+    
+    m_file.close();
 }
 
 void la::Account::saveToJson(std::string m_path)
@@ -79,12 +80,14 @@ void la::Account::saveToJson(std::string m_path)
         obj["date"] = f_transaction.getDate().toString("dd.MM.yyyy hh:mm");
         obj["amount"] = f_transaction.getAmount();
 
+        if(!f_transaction.isIncome())
+            obj["amount"] = f_transaction.getAmount() * -1;
         m_transactions.append(obj);
     }
 
     m_root["transactions"] = m_transactions;//(6)
     m_file.write(QJsonDocument(m_root).toJson(QJsonDocument::Indented));
-
+    m_file.close();
 }
 
 void la::Account::showAccountBalance()
