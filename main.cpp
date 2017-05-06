@@ -27,6 +27,13 @@ int main(int argc, char *argv[]){
     QCoreApplication app(argc, argv);
     QCoreApplication::setApplicationName("my belka");
     QCoreApplication::setApplicationVersion("0.1");
+    QCoreApplication::setOrganizationName("Leinnan");
+
+    QSettings settings("MyBelka","Leinnan");
+
+//    QString settings_file = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+
+//    std::cout << settings_file.toStdString();
 
     QCommandLineParser parser;
     parser.setApplicationDescription("My simple accounting system, still very early version, written in C++ with QTCore");
@@ -46,12 +53,12 @@ int main(int argc, char *argv[]){
     parser.process(app);
 
 
-    std::string json_path = "test.json";
     la::Account test_account;
 
-    if(parser.isSet(sourceOption))
-        json_path = parser.value(sourceOption).toStdString();
-
+    if(parser.isSet(sourceOption)){
+        settings.setValue("json_path",parser.value(sourceOption));
+    }
+    std::string json_path = settings.value("json_path","test.json").toString().toStdString();
 
     test_account.readFromJson(json_path);
 
