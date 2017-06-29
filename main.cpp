@@ -9,7 +9,7 @@ namespace cmd{
     la::Transaction addTransaction(){
         std::string m_name;
 
-        int m_amount = 0;
+        double m_amount = 0;
 
         std::cout << "\e[1mAdding new transaction\e[0m\n"
                   << "\nPlease input name of transaction: ";
@@ -19,7 +19,7 @@ namespace cmd{
         std::cin >> m_amount;
         m_amount *= 100;
 
-        return la::Transaction(m_amount,m_name);
+        return la::Transaction((int)m_amount,m_name);
     }
 }
 

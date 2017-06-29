@@ -86,7 +86,7 @@ void la::Account::saveToJson(std::string m_path)
     }
 
     m_root["transactions"] = m_transactions;//(6)
-    m_file.write(QJsonDocument(m_root).toJson(QJsonDocument::Indented));
+    m_file.write(QJsonDocument(m_root).toJson(QJsonDocument::Compact));
     m_file.close();
 }
 
