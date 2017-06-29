@@ -23,7 +23,7 @@ void la::Account::addTransaction(la::Transaction m_transaction)
 void la::Account::sortTransactions()
 {
     std::sort(std::begin(this->transactions),std::end(this->transactions),
-              [&](const la::Transaction& lhs, const la::Transaction& rhs){ return lhs.getDate() < rhs.getDate();});
+              [](const la::Transaction& lhs, const la::Transaction& rhs){ return lhs.getDate() < rhs.getDate();});
 }
 
 void la::Account::updateAccountBalance()
@@ -75,14 +75,14 @@ void la::Account::saveToJson(std::string m_path)
 
 
     for(la::Transaction f_transaction : transactions){
-        QJsonObject obj;
-        obj["title"] = QString::fromStdString(f_transaction.getTitle());
-        obj["date"] = f_transaction.getDate().toString("dd.MM.yyyy hh:mm");
-        obj["amount"] = f_transaction.getAmount();
+        QJsonObject m_obj;
+        m_obj["title"] = QString::fromStdString(f_transaction.getTitle());
+        m_obj["date"] = f_transaction.getDate().toString("dd.MM.yyyy hh:mm");
+        m_obj["amount"] = f_transaction.getAmount();
 
         if(!f_transaction.isIncome())
-            obj["amount"] = f_transaction.getAmount() * -1;
-        m_transactions.append(obj);
+            m_obj["amount"] = f_transaction.getAmount() * -1;
+        m_transactions.append(m_obj);
     }
 
     m_root["transactions"] = m_transactions;//(6)
@@ -93,6 +93,5 @@ void la::Account::saveToJson(std::string m_path)
 void la::Account::showAccountBalance()
 {
     this->updateAccountBalance();
-    float m_balance = balance / 100.0;
-    std::cout << "\nCurrent Accounting balance: \e[1m" << m_balance << "\e[0m\n";
+    std::cout << "\nCurrent Accounting balance: \e[1m" << (float)(balance / 100.0) << "\e[0m\n";
 }
