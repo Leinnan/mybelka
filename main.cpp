@@ -92,7 +92,7 @@ int main(int argc, char *argv[]){
 
     test_account.sortTransactions();
     test_account.saveToJson(json_path);
-    test_account.showTransactions();
+    test_account.showTransactions(true);
     test_account.showAccountBalance();
     return 0;
 }

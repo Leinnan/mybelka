@@ -55,11 +55,11 @@ Transaction::Transaction(std::string m_date,int m_amount, std::string m_title)
 
 }
 
-void Transaction::display()
+void Transaction::display( bool displayFullDate /*= true*/ )
 {
     char sign = (this->transaction_type == TransactionType::INCOME) ? '+' : '-';
     std::string color = (this->transaction_type == TransactionType::INCOME) ? ec_green : ec_red;
-    const QString date_format = "dd.MM.yyyy hh:mm";
+    const QString date_format = displayFullDate ? "dd.MM.yyyy hh:mm" : "\thh:mm";
     float m_amount = this->amount / 100.0;
     std::string m_date_title =  this->date.toString(date_format).toStdString() + " " + this->title;
     m_date_title.append(40-m_date_title.length(),' ');

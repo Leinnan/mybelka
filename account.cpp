@@ -6,11 +6,28 @@ la::Account::Account()
 
 }
 
-void la::Account::showTransactions()
+void la::Account::showTransactions( bool divideByDays /*= false*/ )
 {
-    for(la::Transaction f_transaction : transactions){
-        f_transaction.display();
-//        std::cout << "______________________________\n";
+//    .toString(date_format).toStdString()
+    if( divideByDays )
+    {
+        QString lastTransactionDate = "none";
+        QString newTransactionDate = "none";
+        for( la::Transaction &f_transaction : transactions )
+        {
+            newTransactionDate = f_transaction.getDate().toString("dd.MM.yyyy");
+            if(lastTransactionDate != newTransactionDate)
+            {
+                std::cout << "\e[1m" << newTransactionDate.toStdString() << "\e[0m\n";
+            }
+            f_transaction.display( false );
+            lastTransactionDate = newTransactionDate;
+        }
+    }
+    else
+    {
+        for(la::Transaction f_transaction : transactions)
+            f_transaction.display();
     }
 }
 

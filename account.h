@@ -13,7 +13,7 @@ class Account
 {
 public:
     Account();
-    void showTransactions();
+    void showTransactions( bool divideByDays );
     void addTransaction(la::Transaction);
     void sortTransactions();
     void showAccountBalance();
