@@ -7,12 +7,16 @@ TARGET = mybelka
 CONFIG += console
 CONFIG -= app_bundle
 
+DESTDIR=build #Target file directory
+OBJECTS_DIR=build/generated #Intermediate object files directory
+MOC_DIR=build/generated #Intermediate moc files directory
+
 TEMPLATE = app
 
-SOURCES += main.cpp \
-    category.cpp \
-    transaction.cpp \
-    account.cpp
+SOURCES += src/main.cpp \
+    src/category.cpp \
+    src/transaction.cpp \
+    src/account.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -26,6 +30,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 HEADERS += \
-    category.h \
-    transaction.h \
-    account.h
+    src/category.h \
+    src/transaction.h \
+    src/account.h
