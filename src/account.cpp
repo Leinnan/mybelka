@@ -4,7 +4,8 @@
 
 la::Account::Account() :
     balance( 0 ),
-    compactFormat( false )
+    compactFormat( false ),
+    deviceId( "none" )
 {
 
 }
@@ -78,6 +79,8 @@ void la::Account::readFromJson(std::string m_path)
         if( obj.contains("currentDate") )
         {
             fileTimestamp = obj["currentDate"].toString();
+            if( obj.contains( "deviceId" ) )
+                deviceId = obj["deviceId"].toString();
         }
         else
         {
@@ -116,9 +119,20 @@ void la::Account::saveToJson(std::string m_path)
     }
 
     {
-        QJsonObject m_currentTimestamp;
-        m_currentTimestamp["currentDate"] = QString::number( QDateTime::currentSecsSinceEpoch() );
-        m_transactions.append( m_currentTimestamp );
+        QJsonObject m_settings;
+        m_settings["currentDate"] = QString::number( QDateTime::currentSecsSinceEpoch() );
+
+        if( deviceId == "none" )
+        {
+            QUuid m_device = QUuid::createUuid();
+            m_settings["deviceId"] = m_device.toString();
+        }
+        else
+        {
+            m_settings["deviceId"] = deviceId;
+        }
+
+        m_transactions.append( m_settings );
     }
 
     m_root["transactions"] = m_transactions;//(6)
@@ -130,6 +144,16 @@ void la::Account::saveToJson(std::string m_path)
 void la::Account::setCompactFormat(bool value)
 {
     compactFormat = value;
+}
+
+void la::Account::setDeviceId(const QString &value)
+{
+    deviceId = value;
+}
+
+QString la::Account::getDeviceId() const
+{
+    return deviceId;
 }
 
 void la::Account::showAccountBalance()

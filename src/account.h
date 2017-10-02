@@ -16,18 +16,24 @@ public:
     void                            showTransactions( bool divideByDays );
     void                            addTransaction(la::Transaction);
     void                            sortTransactions();
+
     void                            showAccountBalance();
     void                            updateAccountBalance();
+
     void                            readFromJson(std::string);
     void                            saveToJson(std::string);
+
     void                            setCompactFormat(bool value = true);
+    QString                         getDeviceId() const;
+    void                            setDeviceId(const QString &value);
 
 private:
 
     std::vector<la::Transaction>    transactions;
-    int                             balance = 0;
+    int                             balance;
     bool                            compactFormat;
     QString                         fileTimestamp;
+    QString                         deviceId;
 
 };
 }

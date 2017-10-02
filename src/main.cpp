@@ -1,4 +1,5 @@
 #include <QtCore>
+#include <QUuid>
 #include <iostream>
 #include <string>
 #include "account.h"
