@@ -20,10 +20,13 @@ public:
     void updateAccountBalance();
     void readFromJson(std::string);
     void saveToJson(std::string);
+    void setCompactFormat(bool value = true);
+
 private:
 
     std::vector<la::Transaction> transactions;
     int balance = 0;
+    bool compactFormat;
 
 };
 }

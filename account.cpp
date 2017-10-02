@@ -86,8 +86,14 @@ void la::Account::saveToJson(std::string m_path)
     }
 
     m_root["transactions"] = m_transactions;//(6)
-    m_file.write(QJsonDocument(m_root).toJson(QJsonDocument::Compact));
+    QJsonDocument::JsonFormat jsonFormat = compactFormat ? QJsonDocument::Compact : QJsonDocument::Indented;
+    m_file.write(QJsonDocument(m_root).toJson(jsonFormat));
     m_file.close();
+}
+
+void la::Account::setCompactFormat(bool value)
+{
+    compactFormat = value;
 }
 
 void la::Account::showAccountBalance()
