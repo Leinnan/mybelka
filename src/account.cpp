@@ -1,14 +1,18 @@
 #include "account.h"
 #include <algorithm>
+#include <iomanip>
 
-la::Account::Account()
+la::Account::Account() :
+    balance( 0 ),
+    compactFormat( false )
 {
 
 }
 
 void la::Account::showTransactions( bool divideByDays /*= false*/ )
 {
-//    .toString(date_format).toStdString()
+    std::cout.precision( 2 );
+    std::cout << std::fixed;
     if( divideByDays )
     {
         QString lastTransactionDate = "none";
@@ -70,10 +74,18 @@ void la::Account::readFromJson(std::string m_path)
 
     for (const QJsonValue & m_value : m_json_array) {
         QJsonObject obj = m_value.toObject();
-        la::Transaction m_transaction(obj["date"].toString().toStdString(),
-                                    obj["amount"].toInt(),
-                                    obj["title"].toString().toStdString());
-        this->transactions.push_back(m_transaction);
+
+        if( obj.contains("currentDate") )
+        {
+            fileTimestamp = obj["currentDate"].toString();
+        }
+        else
+        {
+            la::Transaction m_transaction(obj["date"].toString().toStdString(),
+                                        obj["amount"].toInt(),
+                                        obj["title"].toString().toStdString());
+            this->transactions.push_back(m_transaction);
+        }
     }
 
     this->sortTransactions();
@@ -91,7 +103,8 @@ void la::Account::saveToJson(std::string m_path)
     QJsonArray m_transactions;//(2)
 
 
-    for(la::Transaction f_transaction : transactions){
+    for(la::Transaction f_transaction : transactions)
+    {
         QJsonObject m_obj;
         m_obj["title"] = QString::fromStdString(f_transaction.getTitle());
         m_obj["date"] = f_transaction.getDate().toString("dd.MM.yyyy hh:mm");
@@ -100,6 +113,12 @@ void la::Account::saveToJson(std::string m_path)
         if(!f_transaction.isIncome())
             m_obj["amount"] = f_transaction.getAmount() * -1;
         m_transactions.append(m_obj);
+    }
+
+    {
+        QJsonObject m_currentTimestamp;
+        m_currentTimestamp["currentDate"] = QString::number( QDateTime::currentSecsSinceEpoch() );
+        m_transactions.append( m_currentTimestamp );
     }
 
     m_root["transactions"] = m_transactions;//(6)

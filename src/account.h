@@ -12,21 +12,22 @@ namespace la {
 class Account
 {
 public:
-    Account();
-    void showTransactions( bool divideByDays );
-    void addTransaction(la::Transaction);
-    void sortTransactions();
-    void showAccountBalance();
-    void updateAccountBalance();
-    void readFromJson(std::string);
-    void saveToJson(std::string);
-    void setCompactFormat(bool value = true);
+                                    Account();
+    void                            showTransactions( bool divideByDays );
+    void                            addTransaction(la::Transaction);
+    void                            sortTransactions();
+    void                            showAccountBalance();
+    void                            updateAccountBalance();
+    void                            readFromJson(std::string);
+    void                            saveToJson(std::string);
+    void                            setCompactFormat(bool value = true);
 
 private:
 
-    std::vector<la::Transaction> transactions;
-    int balance = 0;
-    bool compactFormat;
+    std::vector<la::Transaction>    transactions;
+    int                             balance = 0;
+    bool                            compactFormat;
+    QString                         fileTimestamp;
 
 };
 }
