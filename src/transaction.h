@@ -22,7 +22,6 @@ public:
     Transaction(TransactionType,int,std::string,la::Category);
     Transaction(int,std::string);
     Transaction(std::string,int,std::string);
-    void display( bool displayFullDate = true );
     bool isIncome(){return transactionType == TransactionType::INCOME;}
     int getAmount(){return this->amount;}
     QDateTime getDate() const;
