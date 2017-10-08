@@ -3,7 +3,8 @@
 // external
 #include <iostream>
 
-la::CliManager::CliManager()
+la::CliManager::CliManager() :
+    out( stdout )
 {
     accountPtr = std::make_shared<la::Account>();
 }
@@ -89,4 +90,40 @@ void la::CliManager::showAccountBalance()
     accountPtr->updateAccountBalance();
     const double m_balance = (double)accountPtr->getBalance() / 100.0;
     std::cout << "\nCurrent Accounting balance: \e[1m" << m_balance << "\e[0m\n";
+}
+
+void la::CliManager::runMenu()
+{
+    char input = 0;
+
+    do
+    {
+        showMenu();
+        std::cin >> input;
+
+        switch( input )
+        {
+        case '1':
+            showTransactions( true );
+            break;
+        case '2':
+            addTransaction();
+            break;
+        case '3':
+            break;
+        default:
+            break;
+        }
+    }
+    while(input == '1' || input == '2' || input == '3');
+
+}
+
+void la::CliManager::showMenu()
+{
+    std::cout << "Choose one option from list below:\n";
+    std::cout << "1. Display transactions\n";
+    std::cout << "2. Add new transaction\n";
+    std::cout << "3. Add new category(mockup)\n";
+    std::cout << "Type anything else to exit\n";
 }

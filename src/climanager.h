@@ -13,14 +13,18 @@ class CliManager
 {
 public:
     CliManager();
-    void applySettings( QSettings& );
-    void showTransactions( bool divideByDays = false );
-    void displayTransaction( la::Transaction&, bool );
-    void addTransaction();
-    void showAccountBalance();
+    void                            applySettings( QSettings& );
+    void                            showTransactions( bool divideByDays = false );
+    void                            displayTransaction( la::Transaction&, bool );
+    void                            addTransaction();
+    void                            showAccountBalance();
+    void                            runMenu();
 
 private:
-    std::shared_ptr<la::Account> accountPtr;
+    void                            showMenu();
+
+    std::shared_ptr<la::Account>    accountPtr;
+    QTextStream                     out;
 };
 
 }

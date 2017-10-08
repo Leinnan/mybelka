@@ -66,8 +66,7 @@ int main(int argc, char *argv[]){
             settings.setValue("compactJSON", false);
     }
 
-    logicManager.showTransactions( true );
-    logicManager.showAccountBalance();
+    logicManager.runMenu();
 
     return 0;
 }
