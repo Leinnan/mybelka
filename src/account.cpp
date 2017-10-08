@@ -10,32 +10,6 @@ la::Account::Account() :
 
 }
 
-void la::Account::showTransactions( bool divideByDays /*= false*/ )
-{
-    std::cout.precision( 2 );
-    std::cout << std::fixed;
-    if( divideByDays )
-    {
-        QString lastTransactionDate = "none";
-        QString newTransactionDate = "none";
-        for( la::Transaction &f_transaction : transactions )
-        {
-            newTransactionDate = f_transaction.getDate().toString("dd.MM.yyyy");
-            if(lastTransactionDate != newTransactionDate)
-            {
-                std::cout << "\e[1m" << newTransactionDate.toStdString() << "\e[0m\n";
-            }
-            f_transaction.display( false );
-            lastTransactionDate = newTransactionDate;
-        }
-    }
-    else
-    {
-        for(la::Transaction f_transaction : transactions)
-            f_transaction.display();
-    }
-}
-
 void la::Account::addTransaction(la::Transaction m_transaction)
 {
     transactions.push_back(m_transaction);
@@ -151,13 +125,13 @@ void la::Account::setDeviceId(const QString &value)
     deviceId = value;
 }
 
+int la::Account::getBalance()
+{
+    updateAccountBalance();
+    return balance;
+}
+
 QString la::Account::getDeviceId() const
 {
     return deviceId;
-}
-
-void la::Account::showAccountBalance()
-{
-    this->updateAccountBalance();
-    std::cout << "\nCurrent Accounting balance: \e[1m" << (float)(balance / 100.0) << "\e[0m\n";
 }

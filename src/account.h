@@ -13,11 +13,9 @@ class Account
 {
 public:
                                     Account();
-    void                            showTransactions( bool divideByDays );
     void                            addTransaction(la::Transaction);
     void                            sortTransactions();
 
-    void                            showAccountBalance();
     void                            updateAccountBalance();
 
     void                            readFromJson(std::string);
@@ -26,6 +24,8 @@ public:
     void                            setCompactFormat(bool value = true);
     QString                         getDeviceId() const;
     void                            setDeviceId(const QString &value);
+    std::vector<la::Transaction>    getTransactions(){ return transactions; };
+    int                             getBalance();
 
 private:
 

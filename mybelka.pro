@@ -16,7 +16,8 @@ TEMPLATE = app
 SOURCES += src/main.cpp \
     src/category.cpp \
     src/transaction.cpp \
-    src/account.cpp
+    src/account.cpp \
+    src/climanager.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -32,4 +33,5 @@ DEFINES += QT_DEPRECATED_WARNINGS
 HEADERS += \
     src/category.h \
     src/transaction.h \
-    src/account.h
+    src/account.h \
+    src/climanager.h

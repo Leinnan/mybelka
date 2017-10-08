@@ -4,25 +4,7 @@
 #include <string>
 #include "account.h"
 #include "transaction.h"
-
-namespace cmd{
-
-    la::Transaction addTransaction(){
-        std::string m_name;
-
-        double m_amount = 0;
-
-        std::cout << "\e[1mAdding new transaction\e[0m\n"
-                  << "\nPlease input name of transaction: ";
-        std::cin >> m_name;
-
-        std::cout << "Now lets type amount: ";
-        std::cin >> m_amount;
-        m_amount *= 100;
-
-        return la::Transaction((int)m_amount,m_name);
-    }
-}
+#include "src/climanager.h"
 
 int main(int argc, char *argv[]){
     QCoreApplication app(argc, argv);
@@ -31,6 +13,7 @@ int main(int argc, char *argv[]){
     QCoreApplication::setOrganizationName("Leinnan");
 
     QSettings settings("MyBelka","Leinnan");
+    la::CliManager logicManager;
 
 //    QString settings_file = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
 
@@ -59,19 +42,14 @@ int main(int argc, char *argv[]){
 
 
     parser.process(app);
-
-
-    la::Account test_account;
+    logicManager.applySettings( settings );
 
     if(parser.isSet(sourceOption)){
         settings.setValue("json_path",parser.value(sourceOption));
     }
-    std::string json_path = settings.value("json_path","test.json").toString().toStdString();
-
-    test_account.readFromJson(json_path);
 
     if(parser.isSet(addOption)){
-        test_account.addTransaction(cmd::addTransaction());
+        logicManager.addTransaction();
     }
 
     if( parser.isSet( intendedOption ) && parser.isSet( compactOption ))
@@ -88,12 +66,8 @@ int main(int argc, char *argv[]){
             settings.setValue("compactJSON", false);
     }
 
-    test_account.setCompactFormat( settings.value( "compactJSON", false ).toBool() );
+    logicManager.showTransactions( true );
+    logicManager.showAccountBalance();
 
-
-    test_account.sortTransactions();
-    test_account.saveToJson(json_path);
-    test_account.showTransactions(true);
-    test_account.showAccountBalance();
     return 0;
 }
