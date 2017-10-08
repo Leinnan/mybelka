@@ -1,6 +1,7 @@
 #ifndef CLIMANAGER_H
 #define CLIMANAGER_H
 #include <src/account.h>
+#include <src/transaction.h>
 
 #include <QtCore>
 #include <memory>
@@ -14,6 +15,7 @@ public:
     CliManager();
     void applySettings( QSettings& );
     void showTransactions( bool divideByDays = false );
+    void displayTransaction( la::Transaction&, bool );
     void addTransaction();
     void showAccountBalance();
 

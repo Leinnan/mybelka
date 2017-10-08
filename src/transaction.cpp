@@ -7,7 +7,7 @@ Transaction::Transaction(std::string m_date,TransactionType m_type, int m_amount
                          std::string m_title, la::Category m_category){
 
     this->date = date.fromString(QString::fromStdString(m_date),QString("dd.MM.yyyy hh:mm"));
-    this->transaction_type = m_type;
+    this->transactionType = m_type;
     this->amount = m_amount;
     this->title = m_title;
     this->category = m_category;
@@ -17,7 +17,7 @@ Transaction::Transaction(std::string m_date,TransactionType m_type, int m_amount
 Transaction::Transaction(TransactionType m_type, int m_amount,
                          std::string m_title, la::Category m_category){
     this->date = date.currentDateTime();
-    this->transaction_type = m_type;
+    this->transactionType = m_type;
     this->amount = m_amount;
     this->title = m_title;
     this->category = m_category;
@@ -27,10 +27,10 @@ Transaction::Transaction(TransactionType m_type, int m_amount,
 Transaction::Transaction(int m_amount, std::string m_title)
 {
     if(m_amount > 0){
-        this->transaction_type = TransactionType::INCOME;
+        this->transactionType = TransactionType::INCOME;
     }
     else{
-        this->transaction_type = TransactionType::EXPENSE;
+        this->transactionType = TransactionType::EXPENSE;
         m_amount *= -1;
     }
     this->amount = m_amount;
@@ -43,10 +43,10 @@ Transaction::Transaction(int m_amount, std::string m_title)
 Transaction::Transaction(std::string m_date,int m_amount, std::string m_title)
 {
     if(m_amount > 0){
-        this->transaction_type = TransactionType::INCOME;
+        this->transactionType = TransactionType::INCOME;
     }
     else{
-        this->transaction_type = TransactionType::EXPENSE;
+        this->transactionType = TransactionType::EXPENSE;
         m_amount *= -1;
     }
     this->amount = m_amount;
@@ -57,8 +57,8 @@ Transaction::Transaction(std::string m_date,int m_amount, std::string m_title)
 
 void Transaction::display( bool displayFullDate /*= true*/ )
 {
-    char sign = (this->transaction_type == TransactionType::INCOME) ? '+' : '-';
-    std::string color = (this->transaction_type == TransactionType::INCOME) ? ec_green : ec_red;
+    char sign = (this->transactionType == TransactionType::INCOME) ? '+' : '-';
+    std::string color = (this->transactionType == TransactionType::INCOME) ? ec_green : ec_red;
     const QString date_format = displayFullDate ? "dd.MM.yyyy hh:mm" : "\thh:mm";
     float m_amount = this->amount / 100.0;
     std::string m_date_title =  this->date.toString(date_format).toStdString() + " " + this->title;
@@ -82,6 +82,11 @@ std::string Transaction::getTitle() const
 void Transaction::setTitle(const std::string &value)
 {
     title = value;
+}
+
+TransactionType Transaction::getTransactionType() const
+{
+    return transactionType;
 }
 
 

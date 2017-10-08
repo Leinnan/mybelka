@@ -23,15 +23,17 @@ public:
     Transaction(int,std::string);
     Transaction(std::string,int,std::string);
     void display( bool displayFullDate = true );
-    bool isIncome(){return transaction_type == TransactionType::INCOME;}
+    bool isIncome(){return transactionType == TransactionType::INCOME;}
     int getAmount(){return this->amount;}
     QDateTime getDate() const;
     std::string getTitle() const;
     void setTitle(const std::string &value);
 
+    TransactionType getTransactionType() const;
+
 private:
     QDateTime date;
-    TransactionType transaction_type;
+    TransactionType transactionType;
     int amount;// w groszach
     std::string title;
     la::Category category;

@@ -40,15 +40,30 @@ void la::CliManager::showTransactions( bool divideByDays /*= false*/ )
             {
                 std::cout << "\e[1m" << newTransactionDate.toStdString() << "\e[0m\n";
             }
-            f_transaction.display( false );
+            displayTransaction( f_transaction, false );
             lastTransactionDate = newTransactionDate;
         }
     }
     else
     {
         for(la::Transaction f_transaction : transactions)
-            f_transaction.display();
+            displayTransaction( f_transaction, true );
     }
+}
+
+void la::CliManager::displayTransaction( la::Transaction& transaction, bool displayFullDate )
+{
+    char sign = (transaction.getTransactionType() == TransactionType::INCOME) ? '+' : '-';
+    std::string color = (transaction.getTransactionType() == TransactionType::INCOME) ? ec_green : ec_red;
+    const QString date_format = displayFullDate ? "dd.MM.yyyy hh:mm" : "\thh:mm";
+    float m_amount = transaction.getAmount() / 100.0;
+    std::string m_date_title =  transaction.getDate().toString(date_format).toStdString()
+            + " " + transaction.getTitle();
+    m_date_title.append(40-m_date_title.length(),' ');
+    std::cout << m_date_title << '\t'
+              << sign << color
+              << m_amount << ec_default
+              << '\n';
 }
 
 void la::CliManager::addTransaction()
