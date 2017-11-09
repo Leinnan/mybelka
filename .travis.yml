@@ -17,9 +17,16 @@ addons:
       - gcc-6
       - g++-6
       - cmake
+    
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+
+before_install:
+    - eval "${MATRIX_EVAL}"
 
 before_script:
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-6" CC="gcc-6"; fi
+  - export CC=gcc-7 
+  - export CXX=g++-7
   - source /opt/qt55/bin/qt55-env.sh
   - mkdir -p build
   - cd build
