@@ -7,8 +7,8 @@ before_install:
     - sudo apt-get update -qq
     
 install: 
-    - sudo apt-get -y install qt58base
-    - source /opt/qt58/bin/qt59-env.sh
+    - sudo apt-get -y install qt59base
+    - source /opt/qt59/bin/qt59-env.sh
     
 addons:
   apt:
