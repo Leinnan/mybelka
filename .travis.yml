@@ -18,7 +18,7 @@ addons:
       - g++-6
       - cmake
 
-before_ script:
+before_script:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-6" CC="gcc-6"; fi
   - source /opt/qt55/bin/qt55-env.sh
   - mkdir -p build
