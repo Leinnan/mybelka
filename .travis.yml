@@ -8,6 +8,16 @@ before_install:
 
 install:
   - sudo apt-get -y install qt55[QTPACKAGE]
+addons:
+    apt:
+      sources:
+        - george-edison55-precise-backports
+        - ubuntu-toolchain-r-test
+      packages:
+        - gcc-6
+        - gfortran-6
+        - g++-6
+        - binutils
 
 before_ script:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-6" CC="gcc-6"; fi
