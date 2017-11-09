@@ -1,4 +1,4 @@
-# My Belka
+# My Belka [![Build Status](https://travis-ci.org/Leinnan/mybelka.svg?branch=master)](https://travis-ci.org/Leinnan/mybelka)
 
 My simple accounting system, still very early version, written in C++ with QTCore
 
