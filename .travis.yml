@@ -22,7 +22,6 @@ addons:
 before_script:
   - export CC=gcc-6
   - export CXX=g++-6
-  - source /opt/qt55/bin/qt55-env.sh
   - mkdir -p build
   - cd build
   - /opt/qt55/bin/qmake ..
