@@ -9,7 +9,8 @@ before_install:
 install:
   - sudo apt-get -y install qt55[QTPACKAGE]
 
-before_script:
+before_ script:
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-6" CC="gcc-6"; fi
   - source /opt/qt55/bin/qt55-env.sh
   - mkdir -p build
   - cd build
