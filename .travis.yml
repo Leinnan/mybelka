@@ -17,12 +17,6 @@ addons:
       - gcc-6
       - g++-6
       - cmake
-    
-      env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-
-before_install:
-    - eval "${MATRIX_EVAL}"
 
 before_script:
   - export CC=gcc-7 
