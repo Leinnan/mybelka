@@ -20,17 +20,24 @@ la::UiManager::UiManager(QWidget *parent) :
     QMainWindow(parent)
 {
     accountPtr = std::make_shared<la::Account>();
+    QDesktopWidget desktop; 
+    QRect screenSize = desktop.availableGeometry(this);
+    setFixedSize(QSize(screenSize.width() * 0.7f, screenSize.height() * 0.7f));
     
     if (objectName().isEmpty())
         setObjectName(QStringLiteral("MainWindow"));
         
-    m_label.setText("MyBelka");
-    m_layout = new QVBoxLayout();
-    m_layout->addWidget(&m_label);
-    m_layout->addSpacing(12);
-    m_layout->addWidget(&m_table);
-    m_layout->setMargin(12);
+    QSpacerItem *spacerBottomMenu = new QSpacerItem(20,20, QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_layout.addWidget(&m_table);
+    m_layout.addSpacing(12);
+    m_bottomMenu.addWidget(&m_accountState);
+    m_bottomMenu.addSpacerItem(spacerBottomMenu);
+    m_layout.addLayout(&m_bottomMenu);
+    m_layout.setMargin(12);
 
+    m_button = new QPushButton("Add new transaction", this);
+    m_bottomMenu.addWidget(m_button);
+    
     m_table.setObjectName("DISPLAY");
     m_table.setColumnCount(3);
     m_table.setRowCount( accountPtr->getTransactions().size() );
@@ -42,8 +49,9 @@ la::UiManager::UiManager(QWidget *parent) :
     m_table.setSelectionMode(QAbstractItemView::SingleSelection);
     m_table.setHorizontalHeaderLabels(m_tableHeader);
     //m_table.verticalHeader()->setVisible(false);
-    m_table.setGeometry(QApplication::desktop()->screenGeometry());
-    m_centralWidget.setLayout(m_layout);
+    m_table.horizontalHeader()->setSectionResizeMode(
+        1, QHeaderView::Stretch);
+    m_centralWidget.setLayout( &m_layout );
     setCentralWidget( &m_centralWidget );
 /*    menuBar = new QMenuBar(this);
     menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -92,7 +100,8 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
                             new QTableWidgetItem(
                             f_transaction.getTitle().c_str()
                             ));
-            QString m_amount = QString::number(f_transaction.getAmount() / 100.0);
+            char sign = (f_transaction.getTransactionType() == TransactionType::INCOME) ? '+' : '-';
+            QString m_amount = sign + QString::number(f_transaction.getAmount() / 100.0);
             m_table.setItem(counter, 2, 
                             new QTableWidgetItem(
                             m_amount
@@ -100,21 +109,18 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
             counter++;
         }
     }
+    {
+        accountPtr->updateAccountBalance();
+        const double m_balance = (double)accountPtr->getBalance() / 100.0;
+        QString accountText = "<b>Account state: </b>";
+        accountText += QString::number(m_balance);
+        m_accountState.setText(accountText);
+    }
+    
 }
 
 void la::UiManager::displayTransaction( la::Transaction& transaction, bool displayFullDate )
 {
-    char sign = (transaction.getTransactionType() == TransactionType::INCOME) ? '+' : '-';
-    std::string color = (transaction.getTransactionType() == TransactionType::INCOME) ? ec_green : ec_red;
-    const QString date_format = displayFullDate ? "dd.MM.yyyy hh:mm" : "\thh:mm";
-    float m_amount = transaction.getAmount() / 100.0;
-    std::string m_date_title =  transaction.getDate().toString(date_format).toStdString()
-            + " " + transaction.getTitle();
-    m_date_title.append(40-m_date_title.length(),' ');
-    std::cout << m_date_title << '\t'
-              << sign << color
-              << m_amount << ec_default
-              << '\n';
 }
 
 void la::UiManager::addTransaction()

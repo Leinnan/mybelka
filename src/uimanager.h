@@ -5,7 +5,7 @@
 
 #include <QtCore>
 #include <QMainWindow>
-#include <QStandardItemModel>
+#include <QPushButton>
 #include <QTableWidget>
 #include <QLabel>
 #include <QLayout>
@@ -33,13 +33,15 @@ private:
 
     std::shared_ptr<la::Account>    accountPtr;
     QWidget *centralWidget;
-    QLabel m_label;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar   *statusBar;
     QTableWidget m_table;
-    QVBoxLayout *m_layout;
+    QVBoxLayout m_layout;
+    QHBoxLayout m_bottomMenu;
     QWidget     m_centralWidget;
+    QLabel m_accountState;
+    QPushButton *m_button;
 };
 
 }
