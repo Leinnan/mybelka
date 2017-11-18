@@ -1,11 +1,6 @@
 QT += core
-QT -= gui
 
-CONFIG += c++11
-
-TARGET = mybelka
-CONFIG += console
-CONFIG -= app_bundle
+CONFIG += c++11 ui_cli
 
 DESTDIR=build #Target file directory
 OBJECTS_DIR=build/generated #Intermediate object files directory
@@ -16,8 +11,8 @@ TEMPLATE = app
 SOURCES += src/main.cpp \
     src/category.cpp \
     src/transaction.cpp \
-    src/account.cpp \
-    src/climanager.cpp
+    src/account.cpp
+
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -35,3 +30,21 @@ HEADERS += \
     src/transaction.h \
     src/account.h \
     src/climanager.h
+
+ui_gfx {
+    QT += gui
+    CONFIG -= ui_cli
+    DEFINES += GUI_MODE
+    QT += widgets
+    target = mybelka_ui
+    SOURCES += src/uimanager.cpp
+    HEADERS += src/uimanager.h
+}
+
+ui_cli {
+    CONFIG += console
+    CONFIG -= app_bundle
+    TARGET = mybelka
+    SOURCES += src/climanager.cpp
+    HEADERS += src/climanager.h
+}

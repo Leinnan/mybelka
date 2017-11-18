@@ -38,6 +38,7 @@ void la::Account::updateAccountBalance()
 
 void la::Account::readFromJson(std::string m_path)
 {
+    std::clog << "Read transactions from " << m_path << '\n';
     QFile m_file(QString::fromStdString(m_path));
     if (!m_file.open(QIODevice::ReadOnly | QIODevice::Text))
             return;
