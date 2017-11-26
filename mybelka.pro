@@ -1,6 +1,6 @@
 QT += core
 
-CONFIG += c++11 ui_cli
+CONFIG += c++11 ui_gfx
 
 DESTDIR=build #Target file directory
 OBJECTS_DIR=build/generated #Intermediate object files directory
@@ -45,7 +45,7 @@ ui_gfx {
 
 ui_cli {
     CONFIG += console
-    CONFIG -= app_bundle
+    CONFIG -= app_bundle ui_gfx
     TARGET = mybelka
     SOURCES += src/climanager.cpp
     HEADERS += src/climanager.h
