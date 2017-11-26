@@ -12,7 +12,8 @@ SOURCES += src/main.cpp \
     src/category.cpp \
     src/transaction.cpp \
     src/account.cpp \
-    src/addtransactionwindow.cpp
+    src/addtransactionwindow.cpp \
+    src/infobar.cpp
 
 
 # The following define makes your compiler emit warnings if you use
@@ -31,7 +32,8 @@ HEADERS += \
     src/transaction.h \
     src/account.h \
     src/climanager.h \
-    src/addtransactionwindow.h
+    src/addtransactionwindow.h \
+    src/infobar.h
 
 ui_gfx {
     QT += gui

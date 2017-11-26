@@ -1,4 +1,5 @@
 #include "src/uimanager.h"
+#include "src/infobar.h"
 
 // external
 #include <iostream>
@@ -19,7 +20,7 @@
 la::UiManager::UiManager(QWidget *parent) :
     QMainWindow(parent)
 {
-    accountPtr = std::make_shared<la::Account>();
+    m_accountPtr = std::make_shared<la::Account>();
     QDesktopWidget desktop; 
     QRect screenSize = desktop.availableGeometry(this);
     setFixedSize(QSize(screenSize.width() * 0.7f, screenSize.height() * 0.7f));
@@ -40,7 +41,7 @@ la::UiManager::UiManager(QWidget *parent) :
     
     m_table.setObjectName("DISPLAY");
     m_table.setColumnCount(3);
-    m_table.setRowCount( accountPtr->getTransactions().size() );
+    m_table.setRowCount( m_accountPtr->getTransactions().size() );
 
     m_transactionWindow = new la::AddTransactionWindow;
     connect( m_transactionWindow, SIGNAL( accepted() ), SLOT( onDialogAccepted() ) );
@@ -55,17 +56,6 @@ la::UiManager::UiManager(QWidget *parent) :
         1, QHeaderView::Stretch);
     m_centralWidget.setLayout( &m_layout );
     setCentralWidget( &m_centralWidget );
-/*    menuBar = new QMenuBar(this);
-    menuBar->setObjectName(QStringLiteral("menuBar"));
-    menuBar->setGeometry(QRect(0, 0, 706, 22));
-    setMenuBar(menuBar);
-    mainToolBar = new QToolBar( this );
-    mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
-    addToolBar(Qt::TopToolBarArea, mainToolBar);
-    statusBar = new QStatusBar( this );
-    statusBar->setObjectName(QStringLiteral("statusBar"));
-    setStatusBar(statusBar);
-    QMetaObject::connectSlotsByName( this );*/
     showTransactions();
     connect(m_button,SIGNAL(clicked()),this,SLOT(showTransactionDialog()));
 }
@@ -75,19 +65,19 @@ void la::UiManager::applySettings( QSettings& settings )
 
     std::string json_path = settings.value("json_path","test.json").toString().toStdString();
 
-    accountPtr->readFromJson(json_path);
-    accountPtr->setCompactFormat( settings.value( "compactJSON", false ).toBool() );
+    m_accountPtr->readFromJson(json_path);
+    m_accountPtr->setCompactFormat( settings.value( "compactJSON", false ).toBool() );
 
 
-    accountPtr->sortTransactions();
-    accountPtr->saveToJson(json_path);
+    m_accountPtr->sortTransactions();
+    m_accountPtr->saveToJson(json_path);
 //    showTransactions(true);
 //    accountPtr->showAccountBalance();
 }
 
 void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
 {
-    std::vector<la::Transaction> transactions = accountPtr->getTransactions();
+    std::vector<la::Transaction> transactions = m_accountPtr->getTransactions();
 
     {
         int counter = 0;
@@ -113,8 +103,8 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
         }
     }
     {
-        accountPtr->updateAccountBalance();
-        const double m_balance = (double)accountPtr->getBalance() / 100.0;
+        m_accountPtr->updateAccountBalance();
+        const double m_balance = (double)m_accountPtr->getBalance() / 100.0;
         QString accountText = "<b>Account state: </b>";
         accountText += QString::number(m_balance);
         m_accountState.setText(accountText);
@@ -140,16 +130,17 @@ void la::UiManager::showTransactionDialog()
 void la::UiManager::onDialogAccepted()
 {
     la::Transaction newTransaction = m_transactionWindow->getTransaction();
-    accountPtr->addTransaction( newTransaction );
-    accountPtr->updateAccountBalance();
+    m_accountPtr->addTransaction( newTransaction );
+    m_accountPtr->updateAccountBalance();
     m_transactionWindow->cleanValues();
+    // TODO add saving to json
     showTransactions();
 }
 
 void la::UiManager::showAccountBalance()
 {
-    accountPtr->updateAccountBalance();
-    const double m_balance = (double)accountPtr->getBalance() / 100.0;
+    m_accountPtr->updateAccountBalance();
+    const double m_balance = (double)m_accountPtr->getBalance() / 100.0;
     std::cout << "\nCurrent Accounting balance: \e[1m" << m_balance << "\e[0m\n";
 }
 

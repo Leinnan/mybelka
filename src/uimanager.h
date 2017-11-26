@@ -35,17 +35,13 @@ private slots:
 private:
     void                            showMenu();
 
-    std::shared_ptr<la::Account>    accountPtr;
-    QWidget *centralWidget;
-    QMenuBar *menuBar;
-    QToolBar *mainToolBar;
-    QStatusBar   *statusBar;
-    QTableWidget m_table;
-    QVBoxLayout m_layout;
-    QHBoxLayout m_bottomMenu;
-    QWidget     m_centralWidget;
-    QLabel m_accountState;
-    QPushButton *m_button;
+    std::shared_ptr<la::Account>    m_accountPtr;
+    QTableWidget                    m_table;
+    QVBoxLayout                     m_layout;
+    QHBoxLayout                     m_bottomMenu;
+    QWidget                         m_centralWidget;
+    QLabel                          m_accountState;
+    QPushButton                     *m_button;
     la::AddTransactionWindow        *m_transactionWindow;
 };
 
