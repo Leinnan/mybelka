@@ -2,13 +2,14 @@
 #define UIMANAGER_H
 #include <src/account.h>
 #include <src/transaction.h>
+#include <src/addtransactionwindow.h>
 
 #include <QtCore>
-#include <QMainWindow>
-#include <QPushButton>
-#include <QTableWidget>
-#include <QLabel>
-#include <QLayout>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLayout>
 #include <memory>
 
 namespace la
@@ -23,11 +24,14 @@ public:
     void                            applySettings( QSettings& );
     void                            showTransactions( bool divideByDays = false );
     void                            displayTransaction( la::Transaction&, bool );
-    void                            addTransaction();
+    void                            addTransaction(){};
     void                            showAccountBalance();
     void                            runMenu();
 protected:
     void changeEvent(QEvent *e){};
+private slots:
+    void                            showTransactionDialog();
+    void                            onDialogAccepted();
 private:
     void                            showMenu();
 
@@ -42,6 +46,7 @@ private:
     QWidget     m_centralWidget;
     QLabel m_accountState;
     QPushButton *m_button;
+    la::AddTransactionWindow        *m_transactionWindow;
 };
 
 }

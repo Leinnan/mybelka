@@ -41,7 +41,9 @@ la::UiManager::UiManager(QWidget *parent) :
     m_table.setObjectName("DISPLAY");
     m_table.setColumnCount(3);
     m_table.setRowCount( accountPtr->getTransactions().size() );
-    
+
+    m_transactionWindow = new la::AddTransactionWindow;
+    connect( m_transactionWindow, SIGNAL( accepted() ), SLOT( onDialogAccepted() ) );
     QStringList m_tableHeader;
     m_tableHeader << "Date" << "Name" << "Amount";
     m_table.setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -65,6 +67,7 @@ la::UiManager::UiManager(QWidget *parent) :
     setStatusBar(statusBar);
     QMetaObject::connectSlotsByName( this );*/
     showTransactions();
+    connect(m_button,SIGNAL(clicked()),this,SLOT(showTransactionDialog()));
 }
 
 void la::UiManager::applySettings( QSettings& settings )
@@ -123,22 +126,24 @@ void la::UiManager::displayTransaction( la::Transaction& transaction, bool displ
 {
 }
 
-void la::UiManager::addTransaction()
+void la::UiManager::showTransactionDialog()
 {
+    if( !m_transactionWindow )
+    {
+        m_transactionWindow = new la::AddTransactionWindow();
+        connect( m_transactionWindow, SIGNAL( accepted() ), SLOT( onDialogAccepted() ) );
+    }
 
-    std::string m_name;
+    m_transactionWindow->show();
+}
 
-    double m_amount = 0;
-
-    std::cout << "\e[1mAdding new transaction\e[0m\n"
-              << "\nPlease input name of transaction: ";
-    std::cin >> m_name;
-
-    std::cout << "Now lets type amount: ";
-    std::cin >> m_amount;
-    m_amount *= 100;
-
-    accountPtr->addTransaction( la::Transaction((int)m_amount,m_name) );
+void la::UiManager::onDialogAccepted()
+{
+    la::Transaction newTransaction = m_transactionWindow->getTransaction();
+    accountPtr->addTransaction( newTransaction );
+    accountPtr->updateAccountBalance();
+    m_transactionWindow->cleanValues();
+    showTransactions();
 }
 
 void la::UiManager::showAccountBalance()

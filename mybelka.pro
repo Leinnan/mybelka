@@ -11,7 +11,8 @@ TEMPLATE = app
 SOURCES += src/main.cpp \
     src/category.cpp \
     src/transaction.cpp \
-    src/account.cpp
+    src/account.cpp \
+    src/addtransactionwindow.cpp
 
 
 # The following define makes your compiler emit warnings if you use
@@ -29,7 +30,8 @@ HEADERS += \
     src/category.h \
     src/transaction.h \
     src/account.h \
-    src/climanager.h
+    src/climanager.h \
+    src/addtransactionwindow.h
 
 ui_gfx {
     QT += gui
