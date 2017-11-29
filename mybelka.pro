@@ -1,6 +1,6 @@
 QT += core
 
-CONFIG += c++11 ui_gfx
+CONFIG += c++11 
 
 DESTDIR=build #Target file directory
 OBJECTS_DIR=build/generated #Intermediate object files directory
@@ -12,8 +12,6 @@ SOURCES += src/main.cpp \
     src/category.cpp \
     src/transaction.cpp \
     src/account.cpp \
-    src/addtransactionwindow.cpp \
-    src/infobar.cpp
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
@@ -38,19 +36,19 @@ INSTALLS += target
 HEADERS += \
     src/category.h \
     src/transaction.h \
-    src/account.h \
-    src/climanager.h \
-    src/addtransactionwindow.h \
-    src/infobar.h
+    src/account.h
 
 ui_gfx {
     QT += gui
     CONFIG -= ui_cli
     DEFINES += GUI_MODE
     QT += widgets
-    target = mybelka_ui
-    SOURCES += src/uimanager.cpp
-    HEADERS += src/uimanager.h
+    SOURCES += src/uimanager.cpp \
+               src/addtransactionwindow.cpp \
+               src/infobar.cpp
+    HEADERS += src/uimanager.h \
+               src/infobar.h \
+               src/addtransactionwindow.h 
 }
 
 ui_cli {
@@ -58,5 +56,5 @@ ui_cli {
     CONFIG -= app_bundle ui_gfx
     TARGET = mybelka
     SOURCES += src/climanager.cpp
-    HEADERS += src/climanager.h
+    HEADERS += src/climanager.h 
 }
