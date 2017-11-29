@@ -20,6 +20,10 @@
 la::UiManager::UiManager(QWidget *parent) :
     QMainWindow(parent)
 {
+    m_table = new QTableWidget();
+    m_layout = new QVBoxLayout();
+    m_bottomMenu = new QHBoxLayout();
+    m_centralWidget = new QWidget();
     m_accountPtr = std::make_shared<la::Account>();
     QDesktopWidget desktop; 
     QRect screenSize = desktop.availableGeometry(this);
@@ -29,50 +33,49 @@ la::UiManager::UiManager(QWidget *parent) :
         setObjectName(QStringLiteral("MainWindow"));
         
     QSpacerItem *spacerBottomMenu = new QSpacerItem(20,20, QSizePolicy::Expanding, QSizePolicy::Fixed);
-    m_layout.addWidget(&m_table);
-    m_layout.addSpacing(12);
-    m_bottomMenu.addWidget(&m_accountState);
-    m_bottomMenu.addSpacerItem(spacerBottomMenu);
-    m_layout.addLayout(&m_bottomMenu);
-    m_layout.setMargin(12);
+    m_layout->addWidget(m_table);
+    m_layout->addSpacing(12);
+    m_bottomMenu->addWidget(&m_accountState);
+    m_bottomMenu->addSpacerItem(spacerBottomMenu);
+    m_layout->addLayout( m_bottomMenu );
+    m_layout->setMargin(12);
 
     m_button = new QPushButton("Add new transaction", this);
-    m_bottomMenu.addWidget(m_button);
+    m_bottomMenu->addWidget(m_button);
     
-    m_table.setObjectName("DISPLAY");
-    m_table.setColumnCount(3);
-    m_table.setRowCount( m_accountPtr->getTransactions().size() );
+    m_table->setObjectName("DISPLAY");
+    m_table->setColumnCount(3);
+    m_table->setRowCount( m_accountPtr->getTransactions().size() );
 
     m_transactionWindow = new la::AddTransactionWindow;
     connect( m_transactionWindow, SIGNAL( accepted() ), SLOT( onDialogAccepted() ) );
     QStringList m_tableHeader;
     m_tableHeader << "Date" << "Name" << "Amount";
-    m_table.setEditTriggers(QAbstractItemView::NoEditTriggers);
-    m_table.setSelectionBehavior(QAbstractItemView::SelectRows);
-    m_table.setSelectionMode(QAbstractItemView::SingleSelection);
-    m_table.setHorizontalHeaderLabels(m_tableHeader);
+    m_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_table->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_table->setHorizontalHeaderLabels(m_tableHeader);
     //m_table.verticalHeader()->setVisible(false);
-    m_table.horizontalHeader()->setSectionResizeMode(
+    m_table->horizontalHeader()->setSectionResizeMode(
         1, QHeaderView::Stretch);
-    m_centralWidget.setLayout( &m_layout );
-    setCentralWidget( &m_centralWidget );
+    m_centralWidget->setLayout( m_layout );
+    setCentralWidget( m_centralWidget );
     showTransactions();
     connect(m_button,SIGNAL(clicked()),this,SLOT(showTransactionDialog()));
 }
 
-void la::UiManager::applySettings( QSettings& settings )
+void la::UiManager::applySettings( QSettings *settings )
 {
-
-    std::string json_path = settings.value("json_path","test.json").toString().toStdString();
+    m_settings = settings;
+    std::string json_path = m_settings->value("json_path","test.json").toString().toStdString();
 
     m_accountPtr->readFromJson(json_path);
-    m_accountPtr->setCompactFormat( settings.value( "compactJSON", false ).toBool() );
+    m_accountPtr->setCompactFormat( m_settings->value( "compactJSON", false ).toBool() );
 
 
     m_accountPtr->sortTransactions();
     m_accountPtr->saveToJson(json_path);
-//    showTransactions(true);
-//    accountPtr->showAccountBalance();
+    m_jsonPath = m_settings->value("json_path","test.json").toString();
 }
 
 void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
@@ -82,20 +85,20 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
     {
         int counter = 0;
         std::cout << "There is " <<  transactions.size() << " transactions\n";
-        m_table.setRowCount( transactions.size() );
+        m_table->setRowCount( transactions.size() );
         for(la::Transaction f_transaction : transactions)
         {
-            m_table.setItem(counter, 0, 
+            m_table->setItem(counter, 0,
                             new QTableWidgetItem(
                             f_transaction.getDate().toString("dd.MM.yyyy hh:mm")
                             ));
-            m_table.setItem(counter, 1, 
+            m_table->setItem(counter, 1,
                             new QTableWidgetItem(
                             f_transaction.getTitle().c_str()
                             ));
             char sign = (f_transaction.getTransactionType() == TransactionType::INCOME) ? '+' : '-';
             QString m_amount = sign + QString::number(f_transaction.getAmount() / 100.0);
-            m_table.setItem(counter, 2, 
+            m_table->setItem(counter, 2,
                             new QTableWidgetItem(
                             m_amount
                             ));
@@ -133,7 +136,8 @@ void la::UiManager::onDialogAccepted()
     m_accountPtr->addTransaction( newTransaction );
     m_accountPtr->updateAccountBalance();
     m_transactionWindow->cleanValues();
-    // TODO add saving to json
+    
+    m_accountPtr->saveToJson( m_jsonPath );
     showTransactions();
 }
 

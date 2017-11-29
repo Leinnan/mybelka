@@ -73,7 +73,12 @@ void la::Account::readFromJson(std::string m_path)
 
 void la::Account::saveToJson(std::string m_path)
 {
-    QFile m_file(QString::fromStdString(m_path));
+    this->saveToJson( QString::fromStdString( m_path ) );
+}
+
+void la::Account::saveToJson(QString m_path)
+{
+    QFile m_file(m_path);
     if (!m_file.open(QFile::WriteOnly))
             return;
 

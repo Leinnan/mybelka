@@ -1,8 +1,8 @@
 #ifndef UIMANAGER_H
 #define UIMANAGER_H
-#include <src/account.h>
-#include <src/transaction.h>
-#include <src/addtransactionwindow.h>
+#include "src/account.h"
+#include "src/transaction.h"
+#include "src/addtransactionwindow.h"
 
 #include <QtCore>
 #include <QtWidgets/QMainWindow>
@@ -21,7 +21,7 @@ class UiManager: public QMainWindow
 public:
     UiManager( QWidget *parent = 0 );
     ~UiManager(){};
-    void                            applySettings( QSettings& );
+    void                            applySettings( QSettings* );
     void                            showTransactions( bool divideByDays = false );
     void                            displayTransaction( la::Transaction&, bool );
     void                            addTransaction(){};
@@ -36,13 +36,15 @@ private:
     void                            showMenu();
 
     std::shared_ptr<la::Account>    m_accountPtr;
-    QTableWidget                    m_table;
-    QVBoxLayout                     m_layout;
-    QHBoxLayout                     m_bottomMenu;
-    QWidget                         m_centralWidget;
+    QTableWidget                    *m_table;
+    QVBoxLayout                     *m_layout;
+    QHBoxLayout                     *m_bottomMenu;
+    QWidget                         *m_centralWidget;
     QLabel                          m_accountState;
     QPushButton                     *m_button;
     la::AddTransactionWindow        *m_transactionWindow;
+    QString                         m_jsonPath;
+    QSettings                       *m_settings;
 };
 
 }

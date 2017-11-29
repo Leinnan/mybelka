@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
 
     parser.process(app);
-    logicManager.applySettings( settings );
+    logicManager.applySettings( &settings );
 
     if(parser.isSet(sourceOption)){
         settings.setValue("json_path",parser.value(sourceOption));
