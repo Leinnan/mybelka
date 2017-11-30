@@ -26,7 +26,7 @@ before_script:
   - cd build
 
 script:
-  - qmake CONFIG+=release PREFIX=/usr ..
+  - qmake CONFIG+=ui_gfx CONFIG+=release PREFIX=/usr ..
   - make -j$(nproc)
   - make INSTALL_ROOT=appdir -j$(nproc) install ; find appdir/
   - wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
