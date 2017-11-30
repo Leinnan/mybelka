@@ -20,6 +20,7 @@ public:
 
     void                            readFromJson(std::string);
     void                            saveToJson(std::string);
+    void                            saveToJson(QString);
 
     void                            setCompactFormat(bool value = true);
     QString                         getDeviceId() const;

@@ -29,6 +29,7 @@ public:
     void setTitle(const std::string &value);
 
     TransactionType getTransactionType() const;
+    void setDate(const QDateTime &value);
 
 private:
     QDateTime date;

@@ -9,19 +9,17 @@ la::CliManager::CliManager() :
     accountPtr = std::make_shared<la::Account>();
 }
 
-void la::CliManager::applySettings( QSettings& settings )
+void la::CliManager::applySettings( QSettings* settings )
 {
-
-    std::string json_path = settings.value("json_path","test.json").toString().toStdString();
+    m_settings = settings;
+    std::string json_path = m_settings->value("json_path","test.json").toString().toStdString();
 
     accountPtr->readFromJson(json_path);
-    accountPtr->setCompactFormat( settings.value( "compactJSON", false ).toBool() );
+    accountPtr->setCompactFormat( m_settings->value( "compactJSON", false ).toBool() );
 
 
     accountPtr->sortTransactions();
     accountPtr->saveToJson(json_path);
-//    showTransactions(true);
-//    accountPtr->showAccountBalance();
 }
 
 void la::CliManager::showTransactions( bool divideByDays /*= false*/ )

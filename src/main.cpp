@@ -2,19 +2,35 @@
 #include <QUuid>
 #include <iostream>
 #include <string>
+#ifdef GUI_MODE
+    #include <QApplication>
+    #include "src/uimanager.h"
+#else
+    #include "src/climanager.h"
+#endif
 #include "account.h"
 #include "transaction.h"
-#include "src/climanager.h"
 
-int main(int argc, char *argv[]){
-    QCoreApplication app(argc, argv);
-    QCoreApplication::setApplicationName("my belka");
-    QCoreApplication::setApplicationVersion("0.1");
-    QCoreApplication::setOrganizationName("Leinnan");
+#ifdef GUI_MODE
+    typedef QApplication MyApp;
+#else
+    typedef QCoreApplication MyApp;
+#endif
+
+int main(int argc, char *argv[])
+{
+    MyApp app(argc, argv);
+    MyApp::setApplicationName("my belka");
+    MyApp::setApplicationVersion("0.1");
+    MyApp::setOrganizationName("Leinnan");
 
     QSettings settings("MyBelka","Leinnan");
-    la::CliManager logicManager;
 
+#ifdef GUI_MODE
+    la::UiManager  logicManager;
+#else
+    la::CliManager logicManager;
+#endif
 //    QString settings_file = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
 
 //    std::cout << settings_file.toStdString();
@@ -42,7 +58,7 @@ int main(int argc, char *argv[]){
 
 
     parser.process(app);
-    logicManager.applySettings( settings );
+    logicManager.applySettings( &settings );
 
     if(parser.isSet(sourceOption)){
         settings.setValue("json_path",parser.value(sourceOption));
@@ -66,7 +82,12 @@ int main(int argc, char *argv[]){
             settings.setValue("compactJSON", false);
     }
 
+#ifdef GUI_MODE
+    logicManager.showTransactions();
+    logicManager.show();
+#else
     logicManager.runMenu();
+#endif
 
-    return 0;
+    return app.exec();
 }

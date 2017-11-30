@@ -75,5 +75,10 @@ TransactionType Transaction::getTransactionType() const
     return transactionType;
 }
 
+void Transaction::setDate(const QDateTime &value)
+{
+    date = value;
+}
+
 
 }
