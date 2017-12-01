@@ -17,11 +17,11 @@ artifacts:
   - path: test.zip
 
   # pushing a single file with environment variable in path and "Deployment name" specified
-  - path: build\$(configuration)
+  - path: mybelka\build\$(configuration)
     name: MyBelka
 
   # pushing entire folder as a zip archive
   - path: logs
 
   # pushing all *.nupkg files in build directory recursively
-  - path: '**\*.exe'
+  - path: 'build\*'
