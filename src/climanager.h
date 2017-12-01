@@ -13,7 +13,7 @@ class CliManager
 {
 public:
     CliManager();
-    void                            applySettings( QSettings& );
+    void                            applySettings( QSettings* );
     void                            showTransactions( bool divideByDays = false );
     void                            displayTransaction( la::Transaction&, bool );
     void                            addTransaction();
@@ -24,6 +24,7 @@ private:
     void                            showMenu();
 
     std::shared_ptr<la::Account>    accountPtr;
+    QSettings                       *m_settings;
     QTextStream                     out;
 };
 

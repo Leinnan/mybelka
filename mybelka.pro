@@ -1,11 +1,6 @@
 QT += core
-QT -= gui
 
-CONFIG += c++11
-
-TARGET = mybelka
-CONFIG += console
-CONFIG -= app_bundle
+CONFIG += c++11 
 
 DESTDIR=build #Target file directory
 OBJECTS_DIR=build/generated #Intermediate object files directory
@@ -17,21 +12,49 @@ SOURCES += src/main.cpp \
     src/category.cpp \
     src/transaction.cpp \
     src/account.cpp \
-    src/climanager.cpp
 
-# The following define makes your compiler emit warnings if you use
-# any feature of Qt which as been marked deprecated (the exact warnings
-# depend on your compiler). Please consult the documentation of the
-# deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
-# You can also make your code fail to compile if you use deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+unix {
+    isEmpty(PREFIX) {
+        PREFIX = /usr/local
+    }
+
+    target.path = $$PREFIX/bin
+
+    shortcutfiles.files = misc/mybelka.desktop
+    shortcutfiles.path = $$PREFIX/share/applications/
+    data.files += misc/mybelka.xpm
+    data.path = $$PREFIX/share/pixmaps/
+
+    INSTALLS += shortcutfiles
+    INSTALLS += data
+}
+
+INSTALLS += target
 
 HEADERS += \
     src/category.h \
     src/transaction.h \
-    src/account.h \
-    src/climanager.h
+    src/account.h
+
+ui_gfx {
+    QT += gui
+    CONFIG -= ui_cli
+    DEFINES += GUI_MODE
+    QT += widgets
+    SOURCES += src/uimanager.cpp \
+               src/addtransactionwindow.cpp \
+               src/infobar.cpp
+    HEADERS += src/uimanager.h \
+               src/infobar.h \
+               src/addtransactionwindow.h 
+}
+
+ui_cli {
+    CONFIG += console
+    CONFIG -= app_bundle ui_gfx
+    TARGET = mybelka
+    SOURCES += src/climanager.cpp
+    HEADERS += src/climanager.h 
+}
