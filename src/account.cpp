@@ -36,10 +36,11 @@ void la::Account::updateAccountBalance()
     }
 }
 
-void la::Account::readFromJson(std::string m_path)
+void la::Account::readFromJson()
 {
-    std::clog << "Read transactions from " << m_path << '\n';
-    QFile m_file(QString::fromStdString(m_path));
+    const QString downloadsFolder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/transactions.json";
+    std::clog << "Read transactions from " << downloadsFolder.toStdString() << '\n';
+    QFile m_file(downloadsFolder);
     if (!m_file.open(QIODevice::ReadOnly | QIODevice::Text))
             return;
     QByteArray m_json_data = m_file.readAll();
@@ -71,14 +72,10 @@ void la::Account::readFromJson(std::string m_path)
     m_file.close();
 }
 
-void la::Account::saveToJson(std::string m_path)
+void la::Account::saveToJson()
 {
-    this->saveToJson( QString::fromStdString( m_path ) );
-}
-
-void la::Account::saveToJson(QString m_path)
-{
-    QFile m_file(m_path);
+    const QString downloadsFolder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/transactions.json";
+    QFile m_file( downloadsFolder );
     if (!m_file.open(QFile::WriteOnly))
             return;
 

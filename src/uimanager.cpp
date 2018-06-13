@@ -24,6 +24,7 @@ la::UiManager::UiManager(QWidget *parent) :
     m_layout = new QVBoxLayout();
     m_bottomMenu = new QHBoxLayout();
     m_centralWidget = new QWidget();
+    m_emptyTableItem = new QTableWidgetItem();
     m_accountPtr = std::make_shared<la::Account>();
     QDesktopWidget desktop; 
     QRect screenSize = desktop.availableGeometry(this);
@@ -39,6 +40,7 @@ la::UiManager::UiManager(QWidget *parent) :
     m_bottomMenu->addSpacerItem(spacerBottomMenu);
     m_layout->addLayout( m_bottomMenu );
     m_layout->setMargin(12);
+    m_emptyTableItem->setFlags(0);
 
     m_button = new QPushButton("Add new transaction", this);
     m_bottomMenu->addWidget(m_button);
@@ -67,15 +69,13 @@ la::UiManager::UiManager(QWidget *parent) :
 void la::UiManager::applySettings( QSettings *settings )
 {
     m_settings = settings;
-    std::string json_path = m_settings->value("json_path","test.json").toString().toStdString();
-
-    m_accountPtr->readFromJson(json_path);
+    
+    m_accountPtr->readFromJson();
     m_accountPtr->setCompactFormat( m_settings->value( "compactJSON", false ).toBool() );
 
 
     m_accountPtr->sortTransactions();
-    m_accountPtr->saveToJson(json_path);
-    m_jsonPath = m_settings->value("json_path","test.json").toString();
+    m_accountPtr->saveToJson();
 }
 
 void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
@@ -86,8 +86,17 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
         int counter = 0;
         std::cout << "There is " <<  transactions.size() << " transactions\n";
         m_table->setRowCount( transactions.size() );
+        QString lastTransactionDate = "";
+        QString newTransactionDate = "";
         for(la::Transaction f_transaction : transactions)
         {
+            newTransactionDate = f_transaction.getDate().toString("dd.MM.yyyy");
+            if(lastTransactionDate != newTransactionDate && !lastTransactionDate.isEmpty())
+            {
+                m_table->setRowCount( m_table->rowCount() + 1 );
+                m_table->setItem(counter, 0, m_emptyTableItem );
+                counter++;
+            }
             m_table->setItem(counter, 0,
                             new QTableWidgetItem(
                             f_transaction.getDate().toString("dd.MM.yyyy hh:mm")
@@ -103,6 +112,7 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
                             m_amount
                             ));
             counter++;
+            lastTransactionDate = newTransactionDate;
         }
     }
     {
@@ -137,7 +147,7 @@ void la::UiManager::onDialogAccepted()
     m_accountPtr->updateAccountBalance();
     m_transactionWindow->cleanValues();
     
-    m_accountPtr->saveToJson( m_jsonPath );
+    m_accountPtr->saveToJson();
     showTransactions();
 }
 

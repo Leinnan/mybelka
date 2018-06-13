@@ -18,9 +18,8 @@ public:
 
     void                            updateAccountBalance();
 
-    void                            readFromJson(std::string);
-    void                            saveToJson(std::string);
-    void                            saveToJson(QString);
+    void                            readFromJson();
+    void                            saveToJson();
 
     void                            setCompactFormat(bool value = true);
     QString                         getDeviceId() const;

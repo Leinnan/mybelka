@@ -40,6 +40,7 @@ private:
     QVBoxLayout                     *m_layout;
     QHBoxLayout                     *m_bottomMenu;
     QWidget                         *m_centralWidget;
+    QTableWidgetItem		    *m_emptyTableItem;
     QLabel                          m_accountState;
     QPushButton                     *m_button;
     la::AddTransactionWindow        *m_transactionWindow;
