@@ -95,6 +95,7 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
             {
                 m_table->setRowCount( m_table->rowCount() + 1 );
                 m_table->setItem(counter, 0, m_emptyTableItem );
+                m_table->setSpan( counter, 0, 1, 3 );
                 counter++;
             }
             m_table->setItem(counter, 0,
