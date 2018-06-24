@@ -2,7 +2,7 @@
 #define UIMANAGER_H
 #include "src/account.h"
 #include "src/transaction.h"
-#include "src/addtransactionwindow.h"
+#include "src/edittransactionwindow.h"
 
 #include <QtCore>
 #include <QtWidgets/QMainWindow>
@@ -11,9 +11,13 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
 #include <memory>
+#include <vector>
+#include <utility>
 
 namespace la
 {
+using TableItem = std::pair<QTableWidgetItem*,int>;// element, index
+using TableItems = std::vector<TableItem>;
 
 class UiManager: public QMainWindow
 {
@@ -31,20 +35,26 @@ protected:
     void changeEvent(QEvent *e){};
 private slots:
     void                            showTransactionDialog();
+    void                            showEditTransactionDialog();
     void                            onDialogAccepted();
+    void                            onEditDialogAccepted();
 private:
     void                            showMenu();
 
     std::shared_ptr<la::Account>    m_accountPtr;
     QTableWidget                    *m_table;
-    QVBoxLayout                     *m_layout;
-    QHBoxLayout                     *m_bottomMenu;
+    QHBoxLayout                     *m_layout;
+    QVBoxLayout                     *m_sideBar;
     QWidget                         *m_centralWidget;
+    TableItems                      m_emptyTableItems;
     QLabel                          m_accountState;
-    QPushButton                     *m_button;
-    la::AddTransactionWindow        *m_transactionWindow;
+    QPushButton                     *m_addTransactionBtn;
+    QPushButton                     *m_editTransactionBtn;
+    la::AddTransactionWindow        *m_addTransactionWindow;
+    la::EditTransactionWindow       *m_editTransactionWindow;
     QString                         m_jsonPath;
     QSettings                       *m_settings;
+    bool                            m_splitByDays;
 };
 
 }

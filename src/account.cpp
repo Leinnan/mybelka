@@ -12,13 +12,13 @@ la::Account::Account() :
 
 void la::Account::addTransaction(la::Transaction m_transaction)
 {
-    transactions.push_back(m_transaction);
+    m_transactions.push_back(m_transaction);
     this->updateAccountBalance();
 }
 
 void la::Account::sortTransactions()
 {
-    std::sort(std::begin(this->transactions),std::end(this->transactions),
+    std::sort(std::begin(this->m_transactions),std::end(this->m_transactions),
               [](const la::Transaction& lhs, const la::Transaction& rhs){ return lhs.getDate() < rhs.getDate();});
 }
 
@@ -26,7 +26,7 @@ void la::Account::updateAccountBalance()
 {
     balance = 0;
 
-    for(la::Transaction f_transaction : transactions){
+    for(la::Transaction f_transaction : m_transactions){
         if(f_transaction.isIncome()){
             balance += f_transaction.getAmount();
         }
@@ -36,10 +36,11 @@ void la::Account::updateAccountBalance()
     }
 }
 
-void la::Account::readFromJson(std::string m_path)
+void la::Account::readFromJson()
 {
-    std::clog << "Read transactions from " << m_path << '\n';
-    QFile m_file(QString::fromStdString(m_path));
+    const QString downloadsFolder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/transactions.json";
+    std::clog << "Read transactions from " << downloadsFolder.toStdString() << '\n';
+    QFile m_file(downloadsFolder);
     if (!m_file.open(QIODevice::ReadOnly | QIODevice::Text))
             return;
     QByteArray m_json_data = m_file.readAll();
@@ -61,8 +62,8 @@ void la::Account::readFromJson(std::string m_path)
         {
             la::Transaction m_transaction(obj["date"].toString().toStdString(),
                                         obj["amount"].toInt(),
-                                        obj["title"].toString().toStdString());
-            this->transactions.push_back(m_transaction);
+                                        obj["title"].toString());
+            this->m_transactions.push_back(m_transaction);
         }
     }
 
@@ -71,31 +72,27 @@ void la::Account::readFromJson(std::string m_path)
     m_file.close();
 }
 
-void la::Account::saveToJson(std::string m_path)
+void la::Account::saveToJson()
 {
-    this->saveToJson( QString::fromStdString( m_path ) );
-}
-
-void la::Account::saveToJson(QString m_path)
-{
-    QFile m_file(m_path);
+    const QString downloadsFolder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/transactions.json";
+    QFile m_file( downloadsFolder );
     if (!m_file.open(QFile::WriteOnly))
             return;
 
     QJsonObject m_root;//root object
-    QJsonArray m_transactions;//(2)
+    QJsonArray transactionsJson;//(2)
 
 
-    for(la::Transaction f_transaction : transactions)
+    for(la::Transaction f_transaction : m_transactions)
     {
         QJsonObject m_obj;
-        m_obj["title"] = QString::fromStdString(f_transaction.getTitle());
+        m_obj["title"] = f_transaction.getTitle();
         m_obj["date"] = f_transaction.getDate().toString("dd.MM.yyyy hh:mm");
         m_obj["amount"] = f_transaction.getAmount();
 
         if(!f_transaction.isIncome())
             m_obj["amount"] = f_transaction.getAmount() * -1;
-        m_transactions.append(m_obj);
+        transactionsJson.append(m_obj);
     }
 
     {
@@ -112,11 +109,11 @@ void la::Account::saveToJson(QString m_path)
             m_settings["deviceId"] = deviceId;
         }
 
-        m_transactions.append( m_settings );
+        transactionsJson.append( m_settings );
     }
 
-    m_root["transactions"] = m_transactions;//(6)
-    QJsonDocument::JsonFormat jsonFormat = compactFormat ? QJsonDocument::Compact : QJsonDocument::Indented;
+    m_root["transactions"] = transactionsJson;//(6)
+    const QJsonDocument::JsonFormat jsonFormat = compactFormat ? QJsonDocument::Compact : QJsonDocument::Indented;
     m_file.write(QJsonDocument(m_root).toJson(jsonFormat));
     m_file.close();
 }
@@ -135,6 +132,23 @@ int la::Account::getBalance()
 {
     updateAccountBalance();
     return balance;
+}
+
+const int la::Account::getTransactionIndexByUid(const QUuid &uid)
+{
+    int index = -1;
+    const int isAny = std::any_of(m_transactions.begin(),m_transactions.end(),[&uid,&index](la::Transaction& transaction){
+        index++;
+        return transaction.getUid() == uid;
+    });
+    return isAny ? index : -1;
+}
+
+void la::Account::replaceTransactionWithUid(const QUuid &uid, const la::Transaction &transaction)
+{
+    std::replace_if(m_transactions.begin(),m_transactions.end(),[&uid](la::Transaction& transaction){
+            return transaction.getUid() == uid;
+        }, transaction);
 }
 
 QString la::Account::getDeviceId() const

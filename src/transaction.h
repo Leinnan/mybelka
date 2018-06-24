@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <QDateTime>
+#include <QUuid>
 #include "category.h"
 
 namespace la {
@@ -18,25 +19,32 @@ enum class TransactionType { INCOME, EXPENSE };
 class Transaction
 {
 public:
-    Transaction(std::string,TransactionType,int,std::string,la::Category);
-    Transaction(TransactionType,int,std::string,la::Category);
-    Transaction(int,std::string);
-    Transaction(std::string,int,std::string);
+    Transaction(std::string,TransactionType,int,QString,la::Category);
+    Transaction(TransactionType,int,QString,la::Category);
+    Transaction(int,QString);
+    Transaction(std::string,int,QString);
     bool isIncome(){return transactionType == TransactionType::INCOME;}
-    int getAmount(){return this->amount;}
+    const int getAmount() const {return this->amount;}
     QDateTime getDate() const;
-    std::string getTitle() const;
-    void setTitle(const std::string &value);
+    QString getTitle() const;
+    void setTitle(const QString &value);
 
     TransactionType getTransactionType() const;
     void setDate(const QDateTime &value);
 
+    QUuid getUid() const;
+
+    void setUid(const QUuid &value);
+
 private:
+    void generateUID();
+
     QDateTime date;
     TransactionType transactionType;
     int amount;// w groszach
-    std::string title;
+    QString title;
     la::Category category;
+    QUuid uid;
 };
 
 }

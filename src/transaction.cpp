@@ -4,27 +4,27 @@ namespace la {
 
 
 Transaction::Transaction(std::string m_date,TransactionType m_type, int m_amount,
-                         std::string m_title, la::Category m_category){
+                         QString m_title, la::Category m_category){
 
     this->date = date.fromString(QString::fromStdString(m_date),QString("dd.MM.yyyy hh:mm"));
     this->transactionType = m_type;
     this->amount = m_amount;
     this->title = m_title;
     this->category = m_category;
-
+    this->uid = QUuid::createUuid();
 }
 
 Transaction::Transaction(TransactionType m_type, int m_amount,
-                         std::string m_title, la::Category m_category){
+                         QString m_title, la::Category m_category){
     this->date = date.currentDateTime();
     this->transactionType = m_type;
     this->amount = m_amount;
     this->title = m_title;
     this->category = m_category;
-
+    this->uid = QUuid::createUuid();
 }
 
-Transaction::Transaction(int m_amount, std::string m_title)
+Transaction::Transaction(int m_amount, QString m_title)
 {
     if(m_amount > 0){
         this->transactionType = TransactionType::INCOME;
@@ -36,11 +36,11 @@ Transaction::Transaction(int m_amount, std::string m_title)
     this->amount = m_amount;
     this->title = m_title;
     this->date = date.currentDateTime();
-
+    this->uid = QUuid::createUuid();
 }
 
 
-Transaction::Transaction(std::string m_date,int m_amount, std::string m_title)
+Transaction::Transaction(std::string m_date,int m_amount, QString m_title)
 {
     if(m_amount > 0){
         this->transactionType = TransactionType::INCOME;
@@ -52,7 +52,7 @@ Transaction::Transaction(std::string m_date,int m_amount, std::string m_title)
     this->amount = m_amount;
     this->title = m_title;
     this->date = date.fromString(QString::fromStdString(m_date),QString("dd.MM.yyyy hh:mm"));
-
+    this->uid = QUuid::createUuid();
 }
 
 QDateTime Transaction::getDate() const
@@ -60,12 +60,12 @@ QDateTime Transaction::getDate() const
     return date;
 }
 
-std::string Transaction::getTitle() const
+QString Transaction::getTitle() const
 {
     return title;
 }
 
-void Transaction::setTitle(const std::string &value)
+void Transaction::setTitle(const QString &value)
 {
     title = value;
 }
@@ -80,5 +80,14 @@ void Transaction::setDate(const QDateTime &value)
     date = value;
 }
 
+QUuid Transaction::getUid() const
+{
+    return uid;
+}
+
+void Transaction::setUid(const QUuid &value)
+{
+    uid = value;
+}
 
 }

@@ -12,6 +12,7 @@ SOURCES += src/main.cpp \
     src/category.cpp \
     src/transaction.cpp \
     src/account.cpp \
+    src/edittransactionwindow.cpp
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
@@ -36,7 +37,8 @@ INSTALLS += target
 HEADERS += \
     src/category.h \
     src/transaction.h \
-    src/account.h
+    src/account.h \
+    src/edittransactionwindow.h
 
 ui_gfx {
     QT += gui

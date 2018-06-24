@@ -14,12 +14,12 @@ void la::CliManager::applySettings( QSettings* settings )
     m_settings = settings;
     std::string json_path = m_settings->value("json_path","test.json").toString().toStdString();
 
-    accountPtr->readFromJson(json_path);
+    accountPtr->readFromJson();
     accountPtr->setCompactFormat( m_settings->value( "compactJSON", false ).toBool() );
 
 
     accountPtr->sortTransactions();
-    accountPtr->saveToJson(json_path);
+    accountPtr->saveToJson();
 }
 
 void la::CliManager::showTransactions( bool divideByDays /*= false*/ )
@@ -57,7 +57,7 @@ void la::CliManager::displayTransaction( la::Transaction& transaction, bool disp
     const QString date_format = displayFullDate ? "dd.MM.yyyy hh:mm" : "\thh:mm";
     float m_amount = transaction.getAmount() / 100.0;
     std::string m_date_title =  transaction.getDate().toString(date_format).toStdString()
-            + " " + transaction.getTitle();
+            + " " + transaction.getTitle().toStdString();
     m_date_title.append(40-m_date_title.length(),' ');
     std::cout << m_date_title << '\t'
               << sign << color
