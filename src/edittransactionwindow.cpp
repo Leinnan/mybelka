@@ -8,15 +8,16 @@ la::EditTransactionWindow::EditTransactionWindow(const la::Transaction& transact
 void la::EditTransactionWindow::FillWindowWithValues(const la::Transaction& transaction)
 {
     this->m_transactionUid = transaction.getUid();
+    const int modifier = (transaction.getTransactionType() == TransactionType::INCOME) ? 1 : -1;
     setTransactionName(QString::fromStdString(transaction.getTitle()));
-    setTransactionAmount(transaction.getAmount());
+    setTransactionAmount(transaction.getAmount() * modifier);
     setTransactionDate(transaction.getDate());
 }
 
 la::Transaction la::EditTransactionWindow::getTransaction()
 {
     la::Transaction result = AddTransactionWindow::getTransaction();
-    //result.setUid(m_transactionUid);
+    result.setUid(m_transactionUid);
 
     return result;
 }

@@ -32,7 +32,9 @@ protected:
     void changeEvent(QEvent *e){};
 private slots:
     void                            showTransactionDialog();
+    void                            showEditTransactionDialog();
     void                            onDialogAccepted();
+    void                            onEditDialogAccepted();
 private:
     void                            showMenu();
 
@@ -43,8 +45,10 @@ private:
     QWidget                         *m_centralWidget;
     std::vector<QTableWidgetItem*>  m_emptyTableItems;
     QLabel                          m_accountState;
-    QPushButton                     *m_button;
-    la::AddTransactionWindow       *m_transactionWindow;
+    QPushButton                     *m_addTransactionBtn;
+    QPushButton                     *m_editTransactionBtn;
+    la::AddTransactionWindow        *m_addTransactionWindow;
+    la::EditTransactionWindow       *m_editTransactionWindow;
     QString                         m_jsonPath;
     QSettings                       *m_settings;
 };

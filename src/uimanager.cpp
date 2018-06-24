@@ -37,15 +37,16 @@ la::UiManager::UiManager(QWidget *parent) :
     m_layout->addLayout( m_sideBar );
     m_layout->setMargin(12);
 
-    m_button = new QPushButton("Add new transaction", this);
-    m_sideBar->addWidget(m_button);
+    m_editTransactionBtn = new QPushButton("Edit transaction", this);
+    m_addTransactionBtn = new QPushButton("Add new transaction", this);
+
+    m_sideBar->addWidget(m_editTransactionBtn);
+    m_sideBar->addWidget(m_addTransactionBtn);
     
     m_table->setObjectName("DISPLAY");
     m_table->setColumnCount(3);
     m_table->setRowCount( m_accountPtr->getTransactions().size() );
 
-    m_transactionWindow = new la::AddTransactionWindow;
-    connect( m_transactionWindow, SIGNAL( accepted() ), SLOT( onDialogAccepted() ) );
     QStringList m_tableHeader;
     m_tableHeader << "Date" << "Name" << "Amount";
     m_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -58,7 +59,8 @@ la::UiManager::UiManager(QWidget *parent) :
     m_centralWidget->setLayout( m_layout );
     setCentralWidget( m_centralWidget );
     showTransactions();
-    connect(m_button,SIGNAL(clicked()),this,SLOT(showTransactionDialog()));
+    connect(m_addTransactionBtn,SIGNAL(clicked()),this,SLOT(showTransactionDialog()));
+    connect(m_editTransactionBtn,SIGNAL(clicked()),this,SLOT(showEditTransactionDialog()));
 }
 
 void la::UiManager::applySettings( QSettings *settings )
@@ -126,25 +128,44 @@ void la::UiManager::displayTransaction( la::Transaction& transaction, bool displ
 
 void la::UiManager::showTransactionDialog()
 {
-    if( !m_transactionWindow )
-    {
-        m_transactionWindow = new la::AddTransactionWindow();
-        connect( m_transactionWindow, SIGNAL( accepted() ), SLOT( onDialogAccepted() ) );
-    }
+    m_addTransactionWindow = new la::AddTransactionWindow();
+    connect( m_addTransactionWindow, SIGNAL( accepted() ), SLOT( onDialogAccepted() ) );
 
-    m_transactionWindow->show();
+    m_addTransactionWindow->show();
+}
+
+void la::UiManager::showEditTransactionDialog()
+{
+    const auto& selectedItemsInTable = m_table->selectedItems();
+
+    if(selectedItemsInTable.empty())
+        return;
+
+    const auto& transactionIndex = selectedItemsInTable[0]->row();
+    std::cout << transactionIndex << '\n';
+    const auto& transaction = m_accountPtr->getTransactions()[transactionIndex];
+
+    m_editTransactionWindow = new la::EditTransactionWindow(transaction);
+    connect( m_editTransactionWindow, SIGNAL( accepted() ), SLOT( onEditDialogAccepted() ) );
+
+    m_editTransactionWindow->show();
 }
 
 void la::UiManager::onDialogAccepted()
 {
-    la::Transaction newTransaction = m_transactionWindow->getTransaction();
+    la::Transaction newTransaction = m_addTransactionWindow->getTransaction();
     m_accountPtr->addTransaction( newTransaction );
     m_accountPtr->updateAccountBalance();
-    m_transactionWindow->cleanValues();
+    m_addTransactionWindow->cleanValues();
 
     m_accountPtr->sortTransactions();
     m_accountPtr->saveToJson();
     showTransactions();
+}
+
+void la::UiManager::onEditDialogAccepted()
+{
+
 }
 
 void la::UiManager::showAccountBalance()
