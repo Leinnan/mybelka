@@ -11,7 +11,7 @@ Transaction::Transaction(std::string m_date,TransactionType m_type, int m_amount
     this->amount = m_amount;
     this->title = m_title;
     this->category = m_category;
-
+    this->uid = QUuid::createUuid();
 }
 
 Transaction::Transaction(TransactionType m_type, int m_amount,
@@ -21,7 +21,7 @@ Transaction::Transaction(TransactionType m_type, int m_amount,
     this->amount = m_amount;
     this->title = m_title;
     this->category = m_category;
-
+    this->uid = QUuid::createUuid();
 }
 
 Transaction::Transaction(int m_amount, std::string m_title)
@@ -36,7 +36,7 @@ Transaction::Transaction(int m_amount, std::string m_title)
     this->amount = m_amount;
     this->title = m_title;
     this->date = date.currentDateTime();
-
+    this->uid = QUuid::createUuid();
 }
 
 
@@ -52,7 +52,7 @@ Transaction::Transaction(std::string m_date,int m_amount, std::string m_title)
     this->amount = m_amount;
     this->title = m_title;
     this->date = date.fromString(QString::fromStdString(m_date),QString("dd.MM.yyyy hh:mm"));
-
+    this->uid = QUuid::createUuid();
 }
 
 QDateTime Transaction::getDate() const
@@ -79,6 +79,5 @@ void Transaction::setDate(const QDateTime &value)
 {
     date = value;
 }
-
 
 }

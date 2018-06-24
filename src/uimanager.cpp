@@ -21,29 +21,24 @@ la::UiManager::UiManager(QWidget *parent) :
     QMainWindow(parent)
 {
     m_table = new QTableWidget();
-    m_layout = new QVBoxLayout();
-    m_bottomMenu = new QHBoxLayout();
+    m_layout = new QHBoxLayout();
+    m_sideBar = new QVBoxLayout();
     m_centralWidget = new QWidget();
-    m_emptyTableItem = new QTableWidgetItem();
     m_accountPtr = std::make_shared<la::Account>();
-    QDesktopWidget desktop; 
-    QRect screenSize = desktop.availableGeometry(this);
-    setFixedSize(QSize(screenSize.width() * 0.7f, screenSize.height() * 0.7f));
-    
+
     if (objectName().isEmpty())
         setObjectName(QStringLiteral("MainWindow"));
-        
-    QSpacerItem *spacerBottomMenu = new QSpacerItem(20,20, QSizePolicy::Expanding, QSizePolicy::Fixed);
-    m_layout->addWidget(m_table);
+
+    m_layout->addWidget(m_table,1);
     m_layout->addSpacing(12);
-    m_bottomMenu->addWidget(&m_accountState);
-    m_bottomMenu->addSpacerItem(spacerBottomMenu);
-    m_layout->addLayout( m_bottomMenu );
+    m_sideBar->addWidget(&m_accountState);
+    m_sideBar->addStretch(1);
+    m_sideBar->setMargin(12);
+    m_layout->addLayout( m_sideBar );
     m_layout->setMargin(12);
-    m_emptyTableItem->setFlags(0);
 
     m_button = new QPushButton("Add new transaction", this);
-    m_bottomMenu->addWidget(m_button);
+    m_sideBar->addWidget(m_button);
     
     m_table->setObjectName("DISPLAY");
     m_table->setColumnCount(3);
@@ -57,7 +52,7 @@ la::UiManager::UiManager(QWidget *parent) :
     m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_table->setSelectionMode(QAbstractItemView::SingleSelection);
     m_table->setHorizontalHeaderLabels(m_tableHeader);
-    //m_table.verticalHeader()->setVisible(false);
+
     m_table->horizontalHeader()->setSectionResizeMode(
         1, QHeaderView::Stretch);
     m_centralWidget->setLayout( m_layout );
@@ -94,7 +89,9 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
             if(lastTransactionDate != newTransactionDate && !lastTransactionDate.isEmpty())
             {
                 m_table->setRowCount( m_table->rowCount() + 1 );
-                m_table->setItem(counter, 0, m_emptyTableItem );
+                m_emptyTableItems.push_back(new QTableWidgetItem());
+                m_emptyTableItems.back()->setFlags(0);
+                m_table->setItem(counter, 0, m_emptyTableItems.back() );
                 m_table->setSpan( counter, 0, 1, 3 );
                 counter++;
             }
@@ -119,8 +116,9 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
     {
         m_accountPtr->updateAccountBalance();
         const double m_balance = (double)m_accountPtr->getBalance() / 100.0;
-        QString accountText = "<b>Account state: </b>";
+        QString accountText = "<b>Current account state: </b><br><span style=\"font-size: 25pt\">";
         accountText += QString::number(m_balance);
+        accountText += "</span>";
         m_accountState.setText(accountText);
     }
     

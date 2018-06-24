@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <QDateTime>
+#include <QUuid>
 #include "category.h"
 
 namespace la {
@@ -32,11 +33,14 @@ public:
     void setDate(const QDateTime &value);
 
 private:
+    void generateUID();
+
     QDateTime date;
     TransactionType transactionType;
     int amount;// w groszach
     std::string title;
     la::Category category;
+    QUuid uid;
 };
 
 }

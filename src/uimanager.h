@@ -11,6 +11,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
 #include <memory>
+#include <vector>
 
 namespace la
 {
@@ -37,10 +38,10 @@ private:
 
     std::shared_ptr<la::Account>    m_accountPtr;
     QTableWidget                    *m_table;
-    QVBoxLayout                     *m_layout;
-    QHBoxLayout                     *m_bottomMenu;
+    QHBoxLayout                     *m_layout;
+    QVBoxLayout                     *m_sideBar;
     QWidget                         *m_centralWidget;
-    QTableWidgetItem		    *m_emptyTableItem;
+    std::vector<QTableWidgetItem*>  m_emptyTableItems;
     QLabel                          m_accountState;
     QPushButton                     *m_button;
     la::AddTransactionWindow        *m_transactionWindow;
