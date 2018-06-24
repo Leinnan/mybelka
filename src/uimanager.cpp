@@ -76,52 +76,48 @@ void la::UiManager::applySettings( QSettings *settings )
 void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
 {
     std::vector<la::Transaction> transactions = m_accountPtr->getTransactions();
+    int counter = 0;
 
+    std::cout << "There is " <<  transactions.size() << " transactions\n";
+    m_table->setRowCount( transactions.size() );
+    QString lastTransactionDate = "";
+    QString newTransactionDate = "";
+    for(la::Transaction f_transaction : transactions)
     {
-        int counter = 0;
-        std::cout << "There is " <<  transactions.size() << " transactions\n";
-        m_table->setRowCount( transactions.size() );
-        QString lastTransactionDate = "";
-        QString newTransactionDate = "";
-        for(la::Transaction f_transaction : transactions)
-        {
-            newTransactionDate = f_transaction.getDate().toString("dd.MM.yyyy");
-            if(lastTransactionDate != newTransactionDate && !lastTransactionDate.isEmpty())
-            {
-                m_table->setRowCount( m_table->rowCount() + 1 );
-                m_emptyTableItems.push_back(new QTableWidgetItem());
-                m_emptyTableItems.back()->setFlags(0);
-                m_table->setItem(counter, 0, m_emptyTableItems.back() );
-                m_table->setSpan( counter, 0, 1, 3 );
-                counter++;
-            }
-            m_table->setItem(counter, 0,
-                            new QTableWidgetItem(
-                            f_transaction.getDate().toString("dd.MM.yyyy hh:mm")
-                            ));
-            m_table->setItem(counter, 1,
-                            new QTableWidgetItem(
-                            f_transaction.getTitle().c_str()
-                            ));
-            char sign = (f_transaction.getTransactionType() == TransactionType::INCOME) ? '+' : '-';
-            QString m_amount = sign + QString::number(f_transaction.getAmount() / 100.0);
-            m_table->setItem(counter, 2,
-                            new QTableWidgetItem(
-                            m_amount
-                            ));
-            counter++;
-            lastTransactionDate = newTransactionDate;
-        }
+        newTransactionDate = f_transaction.getDate().toString("dd.MM.yyyy");
+//        if(lastTransactionDate != newTransactionDate && !lastTransactionDate.isEmpty())
+//        {
+//            m_table->setRowCount( m_table->rowCount() + 1 );
+//            m_emptyTableItems.push_back(new QTableWidgetItem());
+//            m_emptyTableItems.back()->setFlags(0);
+//            m_table->setItem(counter, 0, m_emptyTableItems.back() );
+//            m_table->setSpan( counter, 0, 1, 3 );
+//            counter++;
+//        }
+        m_table->setItem(counter, 0,
+                        new QTableWidgetItem(
+                        f_transaction.getDate().toString("dd.MM.yyyy hh:mm")
+                        ));
+        m_table->setItem(counter, 1,
+                        new QTableWidgetItem(
+                        f_transaction.getTitle().c_str()
+                        ));
+        char sign = (f_transaction.getTransactionType() == TransactionType::INCOME) ? '+' : '-';
+        QString m_amount = sign + QString::number(f_transaction.getAmount() / 100.0);
+        m_table->setItem(counter, 2,
+                        new QTableWidgetItem(
+                        m_amount
+                        ));
+        counter++;
+        lastTransactionDate = newTransactionDate;
     }
-    {
-        m_accountPtr->updateAccountBalance();
-        const double m_balance = (double)m_accountPtr->getBalance() / 100.0;
-        QString accountText = "<b>Current account state: </b><br><span style=\"font-size: 25pt\">";
-        accountText += QString::number(m_balance);
-        accountText += "</span>";
-        m_accountState.setText(accountText);
-    }
-    
+
+    m_accountPtr->updateAccountBalance();
+    const double m_balance = (double)m_accountPtr->getBalance() / 100.0;
+    QString accountText = "<b>Current account state: </b><br><span style=\"font-size: 25pt\">";
+    accountText += QString::number(m_balance);
+    accountText += "</span>";
+    m_accountState.setText(accountText);
 }
 
 void la::UiManager::displayTransaction( la::Transaction& transaction, bool displayFullDate )
@@ -145,7 +141,8 @@ void la::UiManager::onDialogAccepted()
     m_accountPtr->addTransaction( newTransaction );
     m_accountPtr->updateAccountBalance();
     m_transactionWindow->cleanValues();
-    
+
+    m_accountPtr->sortTransactions();
     m_accountPtr->saveToJson();
     showTransactions();
 }

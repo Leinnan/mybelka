@@ -80,4 +80,14 @@ void Transaction::setDate(const QDateTime &value)
     date = value;
 }
 
+QUuid Transaction::getUid() const
+{
+    return uid;
+}
+
+void Transaction::setUid(const QUuid &value)
+{
+    uid = value;
+}
+
 }

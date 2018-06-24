@@ -52,6 +52,21 @@ namespace la
         m_transactionAmount.second.setText("");
     }
 
+    void AddTransactionWindow::setTransactionName(const QString& name)
+    {
+        m_transactionName.second.setText(name);
+    }
+
+    void AddTransactionWindow::setTransactionAmount(const int& amount)
+    {
+        m_transactionAmount.second.setText(QString::number(amount));
+    }
+
+    void AddTransactionWindow::setTransactionDate(const QDateTime& date)
+    {
+        m_transactionDate.second.setDateTime(date);
+    }
+
 
 
 }

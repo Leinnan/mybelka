@@ -24,13 +24,17 @@ public:
     Transaction(int,std::string);
     Transaction(std::string,int,std::string);
     bool isIncome(){return transactionType == TransactionType::INCOME;}
-    int getAmount(){return this->amount;}
+    const int getAmount() const {return this->amount;}
     QDateTime getDate() const;
     std::string getTitle() const;
     void setTitle(const std::string &value);
 
     TransactionType getTransactionType() const;
     void setDate(const QDateTime &value);
+
+    QUuid getUid() const;
+
+    void setUid(const QUuid &value);
 
 private:
     void generateUID();

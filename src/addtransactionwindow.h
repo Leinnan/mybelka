@@ -24,6 +24,9 @@ public:
     ~AddTransactionWindow(){}
     la::Transaction getTransaction() const;
     void cleanValues();
+    void setTransactionName(const QString&);
+    void setTransactionAmount(const int&);
+    void setTransactionDate(const QDateTime&);
 
 private:
     QVBoxLayout                         m_layout;

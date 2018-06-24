@@ -24,12 +24,13 @@ public:
     void                            setCompactFormat(bool value = true);
     QString                         getDeviceId() const;
     void                            setDeviceId(const QString &value);
-    std::vector<la::Transaction>    getTransactions(){ return transactions; };
+    std::vector<la::Transaction>    getTransactions(){ return m_transactions; }
     int                             getBalance();
+    const int                       getTransactionIndexByUid(const QUuid& uid);
 
 private:
 
-    std::vector<la::Transaction>    transactions;
+    std::vector<la::Transaction>    m_transactions;
     int                             balance;
     bool                            compactFormat;
     QString                         fileTimestamp;

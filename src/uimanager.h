@@ -2,7 +2,7 @@
 #define UIMANAGER_H
 #include "src/account.h"
 #include "src/transaction.h"
-#include "src/addtransactionwindow.h"
+#include "src/edittransactionwindow.h"
 
 #include <QtCore>
 #include <QtWidgets/QMainWindow>
@@ -44,7 +44,7 @@ private:
     std::vector<QTableWidgetItem*>  m_emptyTableItems;
     QLabel                          m_accountState;
     QPushButton                     *m_button;
-    la::AddTransactionWindow        *m_transactionWindow;
+    la::AddTransactionWindow       *m_transactionWindow;
     QString                         m_jsonPath;
     QSettings                       *m_settings;
 };
