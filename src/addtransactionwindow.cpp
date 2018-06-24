@@ -30,7 +30,6 @@ namespace la
 
         connect(m_buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
         connect(m_buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
-        //        setCentralWidget( &m_centralWidget );
     }
 
     Transaction AddTransactionWindow::getTransaction() const
