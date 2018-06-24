@@ -1,0 +1,29 @@
+version: 0.1.{build}
+platform: Any CPU
+
+configuration: Release
+
+install:
+  - set QTDIR=C:\Qt\5.9.2\mingw53_32
+  - set PATH=%PATH%;%QTDIR%\bin;C:\MinGW\bin
+
+build_script:
+  - qmake CONFIG+=ui_gfx CONFIG+=release .
+  - mingw32-make
+
+artifacts:
+
+  # pushing a single file
+  - path: test.zip
+
+  # pushing a single file with environment variable in path and "Deployment name" specified
+  - path: mybelka\build\$(configuration)
+    name: MyBelka
+
+  # pushing entire folder as a zip archive
+  - path: logs
+
+  # pushing all *.nupkg files in build directory recursively
+  - path: 'build\*'
+
+  - path: 'mybelka\build\$(configuration)\*'
