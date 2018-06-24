@@ -144,6 +144,13 @@ const int la::Account::getTransactionIndexByUid(const QUuid &uid)
     return isAny ? index : -1;
 }
 
+void la::Account::replaceTransactionWithUid(const QUuid &uid, const la::Transaction &transaction)
+{
+    std::replace_if(m_transactions.begin(),m_transactions.end(),[&uid](la::Transaction& transaction){
+            return transaction.getUid() == uid;
+        }, transaction);
+}
+
 QString la::Account::getDeviceId() const
 {
     return deviceId;

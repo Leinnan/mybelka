@@ -165,7 +165,18 @@ void la::UiManager::onDialogAccepted()
 
 void la::UiManager::onEditDialogAccepted()
 {
+    const auto& editedTransaction = m_editTransactionWindow->getTransaction();
+    const auto& transactionUid = editedTransaction.getUid();
+    if( m_accountPtr->getTransactionIndexByUid( transactionUid ) > -1 )
+    {
+            m_accountPtr->replaceTransactionWithUid(transactionUid, editedTransaction);
+            m_accountPtr->updateAccountBalance();
 
+            m_accountPtr->sortTransactions();
+            m_accountPtr->saveToJson();
+            showTransactions();
+    }
+    m_editTransactionWindow->cleanValues();
 }
 
 void la::UiManager::showAccountBalance()

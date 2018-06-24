@@ -37,7 +37,7 @@ namespace la
     {
         QString amountText = m_transactionAmount.second.text().replace(",",".");
 
-        const auto title = m_transactionName.second.text().toStdString();
+        const auto title = m_transactionName.second.text();
         const auto amount = amountText.toDouble() * 100;
         const auto date = m_transactionDate.second.dateTime();
         la::Transaction result( amount, title );

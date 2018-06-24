@@ -27,6 +27,7 @@ public:
     std::vector<la::Transaction>    getTransactions(){ return m_transactions; }
     int                             getBalance();
     const int                       getTransactionIndexByUid(const QUuid& uid);
+    void                            replaceTransactionWithUid(const QUuid& uid, const la::Transaction& transaction);
 
 private:
 
