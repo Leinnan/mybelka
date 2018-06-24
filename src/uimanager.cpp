@@ -84,10 +84,11 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
     m_table->setRowCount( transactions.size() );
     QString lastTransactionDate = "";
     QString newTransactionDate = "";
+    m_emptyTableItems.clear();
     for(la::Transaction f_transaction : transactions)
     {
         newTransactionDate = f_transaction.getDate().toString("dd.MM.yyyy");
-        if(m_splitByDays && lastTransactionDate != newTransactionDate && !lastTransactionDate.isEmpty())
+        if(m_splitByDays && lastTransactionDate != newTransactionDate)
         {
             m_table->setRowCount( m_table->rowCount() + 1 );
             m_emptyTableItems.push_back( { new QTableWidgetItem(), counter } );
@@ -143,12 +144,13 @@ void la::UiManager::showEditTransactionDialog()
         return;
 
 
-    const auto& transactionIndex = selectedItemsInTable[0]->row();
+    const auto& tableRow = selectedItemsInTable[0]->row();
     // remember about empty lines!
     const int emptyLines = std::count_if(m_emptyTableItems.begin(),m_emptyTableItems.end(),
-                                         [&transactionIndex](TableItem& tableItem){ return tableItem.second < transactionIndex; });
-    std::cout << transactionIndex << '\n';
-    const auto& transaction = m_accountPtr->getTransactions()[transactionIndex - emptyLines];
+                                         [&tableRow](TableItem& tableItem){ return tableItem.second < tableRow; });
+
+    const auto& transactionIndex = tableRow - emptyLines;
+    la::Transaction transaction = m_accountPtr->getTransactions()[transactionIndex];
 
     m_editTransactionWindow = new la::EditTransactionWindow(transaction);
     connect( m_editTransactionWindow, SIGNAL( accepted() ), SLOT( onEditDialogAccepted() ) );
