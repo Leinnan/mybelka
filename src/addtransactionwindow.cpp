@@ -57,7 +57,7 @@ namespace la
         m_transactionName.second.setText(name);
     }
 
-    void AddTransactionWindow::setTransactionAmount(const int& amount)
+    void AddTransactionWindow::setTransactionAmount(const double& amount)
     {
         m_transactionAmount.second.setText(QString::number(amount));
     }

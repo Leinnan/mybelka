@@ -87,15 +87,15 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
     for(la::Transaction f_transaction : transactions)
     {
         newTransactionDate = f_transaction.getDate().toString("dd.MM.yyyy");
-//        if(lastTransactionDate != newTransactionDate && !lastTransactionDate.isEmpty())
-//        {
-//            m_table->setRowCount( m_table->rowCount() + 1 );
-//            m_emptyTableItems.push_back(new QTableWidgetItem());
-//            m_emptyTableItems.back()->setFlags(0);
-//            m_table->setItem(counter, 0, m_emptyTableItems.back() );
-//            m_table->setSpan( counter, 0, 1, 3 );
-//            counter++;
-//        }
+        if(lastTransactionDate != newTransactionDate && !lastTransactionDate.isEmpty())
+        {
+            m_table->setRowCount( m_table->rowCount() + 1 );
+            m_emptyTableItems.push_back( { new QTableWidgetItem(), counter } );
+            m_emptyTableItems.back().first->setFlags(0);
+            m_table->setItem(counter, 0, m_emptyTableItems.back().first );
+            m_table->setSpan( counter, 0, 1, 3 );
+            counter++;
+        }
         m_table->setItem(counter, 0,
                         new QTableWidgetItem(
                         f_transaction.getDate().toString("dd.MM.yyyy hh:mm")
@@ -141,9 +141,13 @@ void la::UiManager::showEditTransactionDialog()
     if(selectedItemsInTable.empty())
         return;
 
+
     const auto& transactionIndex = selectedItemsInTable[0]->row();
+    // remember about empty lines!
+    const int emptyLines = std::count_if(m_emptyTableItems.begin(),m_emptyTableItems.end(),
+                                         [&transactionIndex](TableItem& tableItem){ return tableItem.second < transactionIndex; });
     std::cout << transactionIndex << '\n';
-    const auto& transaction = m_accountPtr->getTransactions()[transactionIndex];
+    const auto& transaction = m_accountPtr->getTransactions()[transactionIndex - emptyLines];
 
     m_editTransactionWindow = new la::EditTransactionWindow(transaction);
     connect( m_editTransactionWindow, SIGNAL( accepted() ), SLOT( onEditDialogAccepted() ) );

@@ -25,7 +25,7 @@ public:
     la::Transaction getTransaction() const;
     void cleanValues();
     void setTransactionName(const QString&);
-    void setTransactionAmount(const int&);
+    void setTransactionAmount(const double&);
     void setTransactionDate(const QDateTime&);
 
 private:

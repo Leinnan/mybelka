@@ -10,7 +10,7 @@ void la::EditTransactionWindow::FillWindowWithValues(const la::Transaction& tran
     this->m_transactionUid = transaction.getUid();
     const int modifier = (transaction.getTransactionType() == TransactionType::INCOME) ? 1 : -1;
     setTransactionName(transaction.getTitle());
-    setTransactionAmount(static_cast<double>(transaction.getAmount() * modifier / 100.0));
+    setTransactionAmount(static_cast<double>(transaction.getAmount()) / 100.0f);
     setTransactionDate(transaction.getDate());
 }
 

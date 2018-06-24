@@ -12,9 +12,12 @@
 #include <QtWidgets/QLayout>
 #include <memory>
 #include <vector>
+#include <utility>
 
 namespace la
 {
+using TableItem = std::pair<QTableWidgetItem*,int>;// element, index
+using TableItems = std::vector<TableItem>;
 
 class UiManager: public QMainWindow
 {
@@ -43,7 +46,7 @@ private:
     QHBoxLayout                     *m_layout;
     QVBoxLayout                     *m_sideBar;
     QWidget                         *m_centralWidget;
-    std::vector<QTableWidgetItem*>  m_emptyTableItems;
+    TableItems                      m_emptyTableItems;
     QLabel                          m_accountState;
     QPushButton                     *m_addTransactionBtn;
     QPushButton                     *m_editTransactionBtn;
