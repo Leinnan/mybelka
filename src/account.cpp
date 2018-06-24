@@ -62,7 +62,7 @@ void la::Account::readFromJson()
         {
             la::Transaction m_transaction(obj["date"].toString().toStdString(),
                                         obj["amount"].toInt(),
-                                        obj["title"].toString().toStdString());
+                                        obj["title"].toString());
             this->m_transactions.push_back(m_transaction);
         }
     }
@@ -86,7 +86,7 @@ void la::Account::saveToJson()
     for(la::Transaction f_transaction : m_transactions)
     {
         QJsonObject m_obj;
-        m_obj["title"] = QString::fromStdString(f_transaction.getTitle());
+        m_obj["title"] = f_transaction.getTitle();
         m_obj["date"] = f_transaction.getDate().toString("dd.MM.yyyy hh:mm");
         m_obj["amount"] = f_transaction.getAmount();
 
@@ -113,7 +113,7 @@ void la::Account::saveToJson()
     }
 
     m_root["transactions"] = transactionsJson;//(6)
-    QJsonDocument::JsonFormat jsonFormat = compactFormat ? QJsonDocument::Compact : QJsonDocument::Indented;
+    const QJsonDocument::JsonFormat jsonFormat = compactFormat ? QJsonDocument::Compact : QJsonDocument::Indented;
     m_file.write(QJsonDocument(m_root).toJson(jsonFormat));
     m_file.close();
 }

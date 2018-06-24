@@ -57,7 +57,7 @@ void la::CliManager::displayTransaction( la::Transaction& transaction, bool disp
     const QString date_format = displayFullDate ? "dd.MM.yyyy hh:mm" : "\thh:mm";
     float m_amount = transaction.getAmount() / 100.0;
     std::string m_date_title =  transaction.getDate().toString(date_format).toStdString()
-            + " " + transaction.getTitle();
+            + " " + transaction.getTitle().toStdString();
     m_date_title.append(40-m_date_title.length(),' ');
     std::cout << m_date_title << '\t'
               << sign << color

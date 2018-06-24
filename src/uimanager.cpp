@@ -102,7 +102,7 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
                         ));
         m_table->setItem(counter, 1,
                         new QTableWidgetItem(
-                        f_transaction.getTitle().c_str()
+                        f_transaction.getTitle()
                         ));
         char sign = (f_transaction.getTransactionType() == TransactionType::INCOME) ? '+' : '-';
         QString m_amount = sign + QString::number(f_transaction.getAmount() / 100.0);
