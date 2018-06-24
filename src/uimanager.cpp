@@ -18,7 +18,8 @@
 #include <QDesktopWidget>
 
 la::UiManager::UiManager(QWidget *parent) :
-    QMainWindow(parent)
+    QMainWindow(parent),
+    m_splitByDays(true)
 {
     m_table = new QTableWidget();
     m_layout = new QHBoxLayout();
@@ -70,7 +71,6 @@ void la::UiManager::applySettings( QSettings *settings )
     m_accountPtr->readFromJson();
     m_accountPtr->setCompactFormat( m_settings->value( "compactJSON", false ).toBool() );
 
-
     m_accountPtr->sortTransactions();
     m_accountPtr->saveToJson();
 }
@@ -87,18 +87,19 @@ void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
     for(la::Transaction f_transaction : transactions)
     {
         newTransactionDate = f_transaction.getDate().toString("dd.MM.yyyy");
-        if(lastTransactionDate != newTransactionDate && !lastTransactionDate.isEmpty())
+        if(m_splitByDays && lastTransactionDate != newTransactionDate && !lastTransactionDate.isEmpty())
         {
             m_table->setRowCount( m_table->rowCount() + 1 );
             m_emptyTableItems.push_back( { new QTableWidgetItem(), counter } );
             m_emptyTableItems.back().first->setFlags(0);
+            m_emptyTableItems.back().first->setText(newTransactionDate);
             m_table->setItem(counter, 0, m_emptyTableItems.back().first );
             m_table->setSpan( counter, 0, 1, 3 );
             counter++;
         }
         m_table->setItem(counter, 0,
                         new QTableWidgetItem(
-                        f_transaction.getDate().toString("dd.MM.yyyy hh:mm")
+                        f_transaction.getDate().toString(m_splitByDays ? "hh:mm" : "dd.MM.yyyy hh:mm")
                         ));
         m_table->setItem(counter, 1,
                         new QTableWidgetItem(

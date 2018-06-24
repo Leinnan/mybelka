@@ -54,6 +54,7 @@ private:
     la::EditTransactionWindow       *m_editTransactionWindow;
     QString                         m_jsonPath;
     QSettings                       *m_settings;
+    bool                            m_splitByDays;
 };
 
 }
