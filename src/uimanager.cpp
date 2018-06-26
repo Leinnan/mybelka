@@ -41,10 +41,14 @@ la::UiManager::UiManager(QWidget *parent) :
     m_layout->addLayout( m_sideBar );
     m_layout->setMargin(12);
 
-    m_removeTransactionBtn = new QPushButton("Remove transaction", this);
-    m_editTransactionBtn = new QPushButton("Edit transaction", this);
-    m_addTransactionBtn = new QPushButton("Add new transaction", this);
+    m_removeTransactionBtn = new QPushButton(tr("Remove transaction"), this);
+    m_editTransactionBtn = new QPushButton(tr("Edit transaction"), this);
+    m_addTransactionBtn = new QPushButton(tr("Add new transaction"), this);
 
+    m_removeTransactionBtn->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
+    m_editTransactionBtn->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
+    m_addTransactionBtn->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_A));
+        
     m_sideBar->addWidget(m_removeTransactionBtn);
     m_sideBar->addWidget(m_editTransactionBtn);
     m_sideBar->addWidget(m_addTransactionBtn);
@@ -218,7 +222,6 @@ void la::UiManager::runMenu()
 
 void la::UiManager::closeEvent(QCloseEvent *event)
 {
-    std::cout << "WRITE SETTINGS";
     QSettings settings;
     settings.setValue("mainWindowGeometry", saveGeometry());
     settings.setValue("mainWindowState", saveState());
@@ -241,6 +244,6 @@ const int la::UiManager::getSelectedTransactionIndexFromTable()
     const int emptyLines = std::count_if(m_emptyTableItems.begin(),m_emptyTableItems.end(),
                                          [&tableRow](TableItem& tableItem){ return tableItem.second < tableRow; });
 
-    const auto& transactionIndex = tableRow - emptyLines;
+    return (tableRow - emptyLines);
 
 }
