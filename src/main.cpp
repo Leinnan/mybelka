@@ -1,5 +1,6 @@
 #include <QtCore>
 #include <QTranslator>
+#include <QStandardPaths>
 #include <QUuid>
 #include <iostream>
 #include <string>
@@ -29,10 +30,17 @@ int main(int argc, char *argv[])
 
     QSettings settings("MyBelka","Leinnan");
 
+    std::cout << locale.toStdString() << '\n';
     if(QString::compare(locale,"pl_PL",Qt::CaseInsensitive) == 0)
     {
-        auto result = translator.load("translation_pl");
-        app.installTranslator(&translator);
+        const auto& paths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+        for( auto path : paths )
+        {
+            if(translator.load("translation_pl",path + "/mybelka/translations/"))
+            {
+                app.installTranslator(&translator);
+            }
+        }
     }
 #ifdef GUI_MODE
     la::UiManager  logicManager;

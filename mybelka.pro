@@ -30,11 +30,14 @@ unix {
     shortcutfiles.files = misc/mybelka.desktop
     shortcutfiles.path = $$PREFIX/share/applications/
     data.files += misc/mybelka.xpm
-    data.files += misc/translation_pl.qm
     data.path = $$PREFIX/share/pixmaps/
+
+    translations.files += misc/translation_pl.qm
+    translations.path = $$PREFIX/share/mybelka/translations
 
     INSTALLS += shortcutfiles
     INSTALLS += data
+    INSTALLS += translations
 }
 
 INSTALLS += target
