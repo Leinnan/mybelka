@@ -12,21 +12,23 @@ build_script:
   - mingw32-make
 
 after_build:
-  - windeployqt build\mybelka.exe
+  - mkdir deploy
+  - copy build\mybelka.exe deploy\
+  - windeployqt deploy\mybelka.exe
+  - 7z a MyBelka.zip deploy
 
 artifacts:
-
   # pushing a single file
-  - path: test.zip
+  - path: MyBelka.zip
 
-  # pushing a single file with environment variable in path and "Deployment name" specified
-  - path: mybelka\build\$(configuration)
-    name: MyBelka 
+  # # pushing a single file with environment variable in path and "Deployment name" specified
+  # - path: mybelka\build\$(configuration)
+  #   name: MyBelka 
 
-  # pushing entire folder as a zip archive
-  - path: logs
+  # # pushing entire folder as a zip archive
+  # - path: logs
 
-  # pushing all *.nupkg files in build directory recursively
-  - path: 'build\*'
+  # # pushing all *.nupkg files in build directory recursively
+  # - path: 'build\*'
 
-  - path: 'mybelka\build\$(configuration)\*'
+  # - path: 'mybelka\build\$(configuration)\*'
