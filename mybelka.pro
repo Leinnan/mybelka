@@ -8,6 +8,8 @@ MOC_DIR=build/generated #Intermediate moc files directory
 
 TEMPLATE = app
 
+TRANSLATIONS += misc/translation_pl.ts
+
 SOURCES += src/main.cpp \
     src/category.cpp \
     src/transaction.cpp \
@@ -28,6 +30,7 @@ unix {
     shortcutfiles.files = misc/mybelka.desktop
     shortcutfiles.path = $$PREFIX/share/applications/
     data.files += misc/mybelka.xpm
+    data.files += misc/translation_pl.qm
     data.path = $$PREFIX/share/pixmaps/
 
     INSTALLS += shortcutfiles

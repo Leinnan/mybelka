@@ -1,4 +1,5 @@
 #include <QtCore>
+#include <QTranslator>
 #include <QUuid>
 #include <iostream>
 #include <string>
@@ -20,12 +21,19 @@
 int main(int argc, char *argv[])
 {
     MyApp app(argc, argv);
+    const QString locale = QLocale::system().name();
+    QTranslator translator;
     MyApp::setApplicationName("my belka");
     MyApp::setApplicationVersion("0.1");
     MyApp::setOrganizationName("Leinnan");
 
     QSettings settings("MyBelka","Leinnan");
 
+    if(QString::compare(locale,"pl_PL",Qt::CaseInsensitive) == 0)
+    {
+        auto result = translator.load("translation_pl");
+        app.installTranslator(&translator);
+    }
 #ifdef GUI_MODE
     la::UiManager  logicManager;
 #else
