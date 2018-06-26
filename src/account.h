@@ -28,6 +28,7 @@ public:
     int                             getBalance();
     const int                       getTransactionIndexByUid(const QUuid& uid);
     void                            replaceTransactionWithUid(const QUuid& uid, const la::Transaction& transaction);
+    void                            removeTransaction(const int& index);
 
 private:
 

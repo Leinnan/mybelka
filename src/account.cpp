@@ -154,7 +154,16 @@ void la::Account::replaceTransactionWithUid(const QUuid &uid, const la::Transact
 {
     std::replace_if(m_transactions.begin(),m_transactions.end(),[&uid](la::Transaction& transaction){
             return transaction.getUid() == uid;
-        }, transaction);
+    }, transaction);
+}
+
+void la::Account::removeTransaction(const int &index)
+{
+    m_transactions.erase(m_transactions.begin()+index-1);
+
+    updateAccountBalance();
+    sortTransactions();
+    saveToJson();
 }
 
 QString la::Account::getDeviceId() const

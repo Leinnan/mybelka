@@ -11,6 +11,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QToolBar>
@@ -21,7 +22,8 @@ la::UiManager::UiManager(QWidget *parent) :
     QMainWindow(parent),
     m_splitByDays(true)
 {
-    setMinimumSize(480,320);
+    QSettings settings;
+    restoreGeometry(settings.value("mainWindowGeometry").toByteArray());
     m_table = new QTableWidget();
     m_layout = new QHBoxLayout();
     m_sideBar = new QVBoxLayout();
@@ -39,9 +41,11 @@ la::UiManager::UiManager(QWidget *parent) :
     m_layout->addLayout( m_sideBar );
     m_layout->setMargin(12);
 
+    m_removeTransactionBtn = new QPushButton("Remove transaction", this);
     m_editTransactionBtn = new QPushButton("Edit transaction", this);
     m_addTransactionBtn = new QPushButton("Add new transaction", this);
 
+    m_sideBar->addWidget(m_removeTransactionBtn);
     m_sideBar->addWidget(m_editTransactionBtn);
     m_sideBar->addWidget(m_addTransactionBtn);
     
@@ -63,12 +67,15 @@ la::UiManager::UiManager(QWidget *parent) :
     showTransactions();
     connect(m_addTransactionBtn,SIGNAL(clicked()),this,SLOT(showTransactionDialog()));
     connect(m_editTransactionBtn,SIGNAL(clicked()),this,SLOT(showEditTransactionDialog()));
+    connect(m_removeTransactionBtn,SIGNAL(clicked()),this,SLOT(handleRemoveTransactionDialog()));
 }
 
 void la::UiManager::applySettings( QSettings *settings )
 {
     m_settings = settings;
-    
+
+    restoreState(m_settings->value("mainWindowState").toByteArray());
+
     m_accountPtr->readFromJson();
     m_accountPtr->setCompactFormat( m_settings->value( "compactJSON", false ).toBool() );
 
@@ -139,18 +146,11 @@ void la::UiManager::showTransactionDialog()
 
 void la::UiManager::showEditTransactionDialog()
 {
-    const auto& selectedItemsInTable = m_table->selectedItems();
+    const auto& transactionIndex = getSelectedTransactionIndexFromTable();
 
-    if(selectedItemsInTable.empty())
+    if( transactionIndex < 0 )
         return;
 
-
-    const auto& tableRow = selectedItemsInTable[0]->row();
-    // remember about empty lines!
-    const int emptyLines = std::count_if(m_emptyTableItems.begin(),m_emptyTableItems.end(),
-                                         [&tableRow](TableItem& tableItem){ return tableItem.second < tableRow; });
-
-    const auto& transactionIndex = tableRow - emptyLines;
     la::Transaction transaction = m_accountPtr->getTransactions()[transactionIndex];
 
     m_editTransactionWindow = new la::EditTransactionWindow(transaction);
@@ -187,6 +187,23 @@ void la::UiManager::onEditDialogAccepted()
     m_editTransactionWindow->cleanValues();
 }
 
+void la::UiManager::handleRemoveTransactionDialog()
+{
+    const int transactionIndex = getSelectedTransactionIndexFromTable();
+    if(transactionIndex < 0)
+        return;
+
+    const auto result = QMessageBox::warning(this, tr("Delete transaction"),
+                                             tr("Are you sure that you want to delete this transaction?"),
+                                             QMessageBox::Yes | QMessageBox::Cancel );
+    if(result == QMessageBox::Yes)
+    {
+        m_accountPtr->removeTransaction(transactionIndex);
+        showTransactions();
+    }
+
+}
+
 void la::UiManager::showAccountBalance()
 {
     m_accountPtr->updateAccountBalance();
@@ -199,7 +216,31 @@ void la::UiManager::runMenu()
     showMenu();
 }
 
+void la::UiManager::closeEvent(QCloseEvent *event)
+{
+    std::cout << "WRITE SETTINGS";
+    QSettings settings;
+    settings.setValue("mainWindowGeometry", saveGeometry());
+    settings.setValue("mainWindowState", saveState());
+}
+
 void la::UiManager::showMenu()
 {
     show();
+}
+
+const int la::UiManager::getSelectedTransactionIndexFromTable()
+{
+    const auto& selectedItemsInTable = m_table->selectedItems();
+
+    if(selectedItemsInTable.empty())
+        return -1;
+
+    const int tableRow = selectedItemsInTable[0]->row();
+    // remember about empty lines!
+    const int emptyLines = std::count_if(m_emptyTableItems.begin(),m_emptyTableItems.end(),
+                                         [&tableRow](TableItem& tableItem){ return tableItem.second < tableRow; });
+
+    const auto& transactionIndex = tableRow - emptyLines;
+
 }
