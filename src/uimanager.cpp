@@ -27,7 +27,9 @@ la::UiManager::UiManager(QWidget *parent) :
     m_table = new QTableWidget();
     m_layout = new QHBoxLayout();
     m_sideBar = new QVBoxLayout();
+    m_buttonsLayout = new QVBoxLayout();
     m_centralWidget = new QWidget();
+    m_buttonGroupBox = new QGroupBox(tr("Transactions"));
     m_accountPtr = std::make_shared<la::Account>();
 
     if (objectName().isEmpty())
@@ -41,17 +43,19 @@ la::UiManager::UiManager(QWidget *parent) :
     m_layout->addLayout( m_sideBar );
     m_layout->setMargin(12);
 
-    m_removeTransactionBtn = new QPushButton(tr("Remove transaction"), this);
-    m_editTransactionBtn = new QPushButton(tr("Edit transaction"), this);
-    m_addTransactionBtn = new QPushButton(tr("Add new transaction"), this);
+    m_removeTransactionBtn = new QPushButton(tr("Remove"), this);
+    m_editTransactionBtn = new QPushButton(tr("Edit"), this);
+    m_addTransactionBtn = new QPushButton(tr("Add new"), this);
 
     m_removeTransactionBtn->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
     m_editTransactionBtn->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
     m_addTransactionBtn->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_A));
-        
-    m_sideBar->addWidget(m_removeTransactionBtn);
-    m_sideBar->addWidget(m_editTransactionBtn);
-    m_sideBar->addWidget(m_addTransactionBtn);
+
+    m_sideBar->addWidget(m_buttonGroupBox);
+    m_buttonsLayout->addWidget(m_removeTransactionBtn);
+    m_buttonsLayout->addWidget(m_editTransactionBtn);
+    m_buttonsLayout->addWidget(m_addTransactionBtn);
+    m_buttonGroupBox->setLayout(m_buttonsLayout);
     
     m_table->setObjectName("DISPLAY");
     m_table->setColumnCount(3);

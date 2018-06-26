@@ -9,6 +9,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QGroupBox>
 #include <QtWidgets/QLayout>
 #include <memory>
 #include <vector>
@@ -48,6 +49,8 @@ private:
     QTableWidget                    *m_table;
     QHBoxLayout                     *m_layout;
     QVBoxLayout                     *m_sideBar;
+    QVBoxLayout                     *m_buttonsLayout;
+    QGroupBox                       *m_buttonGroupBox;
     QWidget                         *m_centralWidget;
     TableItems                      m_emptyTableItems;
     QLabel                          m_accountState;
