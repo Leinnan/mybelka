@@ -11,6 +11,9 @@ build_script:
   - qmake CONFIG+=ui_gfx CONFIG+=release .
   - mingw32-make
 
+after_build:
+  - windeployqt build\mybelka.exe
+
 artifacts:
 
   # pushing a single file
@@ -18,7 +21,7 @@ artifacts:
 
   # pushing a single file with environment variable in path and "Deployment name" specified
   - path: mybelka\build\$(configuration)
-    name: MyBelka
+    name: MyBelka 
 
   # pushing entire folder as a zip archive
   - path: logs
