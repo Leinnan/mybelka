@@ -74,10 +74,16 @@ void la::Account::readFromJson()
 
 void la::Account::saveToJson()
 {
-    const QString downloadsFolder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/transactions.json";
-    QFile m_file( downloadsFolder );
+    const QString folder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir dir;
+    const QString fileToSave = folder + "/transactions.json";
+    QFile m_file( fileToSave );
+
+    if(!dir.exists(folder))
+        dir.mkpath(folder);
+
     if (!m_file.open(QFile::WriteOnly))
-            return;
+        return;
 
     QJsonObject m_root;//root object
     QJsonArray transactionsJson;//(2)

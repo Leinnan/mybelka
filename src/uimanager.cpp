@@ -21,6 +21,7 @@ la::UiManager::UiManager(QWidget *parent) :
     QMainWindow(parent),
     m_splitByDays(true)
 {
+    setMinimumSize(480,320);
     m_table = new QTableWidget();
     m_layout = new QHBoxLayout();
     m_sideBar = new QVBoxLayout();

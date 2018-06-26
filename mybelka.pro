@@ -16,6 +16,8 @@ SOURCES += src/main.cpp \
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
+target.path = $$PREFIX/bin
+
 unix {
     isEmpty(PREFIX) {
         PREFIX = /usr/local
