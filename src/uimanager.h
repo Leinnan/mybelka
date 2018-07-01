@@ -11,6 +11,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QLayout>
+#include <QtWidgets/QTabWidget>
 #include <memory>
 #include <vector>
 #include <utility>
@@ -51,7 +52,8 @@ private:
     QVBoxLayout                     *m_sideBar;
     QVBoxLayout                     *m_buttonsLayout;
     QGroupBox                       *m_buttonGroupBox;
-    QWidget                         *m_centralWidget;
+    QTabWidget                      *m_tabsWidget;
+    QWidget                         *m_mainTab;
     TableItems                      m_emptyTableItems;
     QLabel                          m_accountState;
     QPushButton                     *m_removeTransactionBtn;

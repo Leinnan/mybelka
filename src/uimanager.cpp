@@ -28,9 +28,12 @@ la::UiManager::UiManager(QWidget *parent) :
     m_layout = new QHBoxLayout();
     m_sideBar = new QVBoxLayout();
     m_buttonsLayout = new QVBoxLayout();
-    m_centralWidget = new QWidget();
+    m_mainTab = new QWidget();
+    m_tabsWidget = new QTabWidget();
     m_buttonGroupBox = new QGroupBox(tr("Transactions"));
     m_accountPtr = std::make_shared<la::Account>();
+    m_tabsWidget->addTab(m_mainTab,tr("Transactions"));
+    m_tabsWidget->addTab( new QWidget(),tr("ToDo"));
 
     if (objectName().isEmpty())
         setObjectName(QStringLiteral("MainWindow"));
@@ -42,7 +45,7 @@ la::UiManager::UiManager(QWidget *parent) :
     m_sideBar->setMargin(12);
     m_layout->addLayout( m_sideBar );
     m_layout->setMargin(12);
-
+        
     m_removeTransactionBtn = new QPushButton(tr("Remove"), this);
     m_editTransactionBtn = new QPushButton(tr("Edit"), this);
     m_addTransactionBtn = new QPushButton(tr("Add new"), this);
@@ -70,8 +73,9 @@ la::UiManager::UiManager(QWidget *parent) :
 
     m_table->horizontalHeader()->setSectionResizeMode(
         1, QHeaderView::Stretch);
-    m_centralWidget->setLayout( m_layout );
-    setCentralWidget( m_centralWidget );
+    m_mainTab->setLayout( m_layout );
+    setCentralWidget( m_tabsWidget );
+
     showTransactions();
     connect(m_addTransactionBtn,SIGNAL(clicked()),this,SLOT(showTransactionDialog()));
     connect(m_editTransactionBtn,SIGNAL(clicked()),this,SLOT(showEditTransactionDialog()));
