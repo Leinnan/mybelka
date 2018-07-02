@@ -26,6 +26,7 @@ la::UiManager::UiManager(QWidget *parent) :
     restoreGeometry(settings.value("mainWindowGeometry").toByteArray());
     m_table = new QTableWidget();
     m_layout = new QHBoxLayout();
+    m_mainWidget = new QVBoxLayout();
     m_sideBar = new QVBoxLayout();
     m_buttonsLayout = new QVBoxLayout();
     m_mainTab = new QWidget();
@@ -34,11 +35,15 @@ la::UiManager::UiManager(QWidget *parent) :
     m_accountPtr = std::make_shared<la::Account>();
     m_tabsWidget->addTab(m_mainTab,tr("Transactions"));
     m_tabsWidget->addTab( new QWidget(),tr("ToDo"));
+    m_searchBox = new QLineEdit();
+    m_searchBox->setClearButtonEnabled(true);
 
     if (objectName().isEmpty())
         setObjectName(QStringLiteral("MainWindow"));
 
-    m_layout->addWidget(m_table,1);
+    m_layout->addLayout(m_mainWidget);
+    m_mainWidget->addWidget(m_searchBox,1);
+    m_mainWidget->addWidget(m_table,1);
     m_layout->addSpacing(12);
     m_sideBar->addWidget(&m_accountState);
     m_sideBar->addStretch(1);
@@ -80,6 +85,7 @@ la::UiManager::UiManager(QWidget *parent) :
     connect(m_addTransactionBtn,SIGNAL(clicked()),this,SLOT(showTransactionDialog()));
     connect(m_editTransactionBtn,SIGNAL(clicked()),this,SLOT(showEditTransactionDialog()));
     connect(m_removeTransactionBtn,SIGNAL(clicked()),this,SLOT(handleRemoveTransactionDialog()));
+    connect(m_searchBox,SIGNAL(textChanged( QString ) ),this,SLOT(UpdateSearchBox( QString )));
 }
 
 void la::UiManager::applySettings( QSettings *settings )
@@ -97,14 +103,17 @@ void la::UiManager::applySettings( QSettings *settings )
 
 void la::UiManager::showTransactions( bool divideByDays /*= false*/ )
 {
-    std::vector<la::Transaction> transactions = m_accountPtr->getTransactions();
+    std::vector<la::Transaction> transactions = m_searchBoxContent.isEmpty() ? m_accountPtr->getTransactions() : m_accountPtr->getTransactionsContaining(m_searchBoxContent);
     int counter = 0;
 
     std::cout << "There is " <<  transactions.size() << " transactions\n";
-    m_table->setRowCount( transactions.size() );
     QString lastTransactionDate = "";
     QString newTransactionDate = "";
+    
     m_emptyTableItems.clear();
+    m_table->clearSpans();
+    m_table->setRowCount( transactions.size() );
+    
     for(la::Transaction f_transaction : transactions)
     {
         newTransactionDate = f_transaction.getDate().toString("dd.MM.yyyy");

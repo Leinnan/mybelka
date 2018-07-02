@@ -42,6 +42,7 @@ private slots:
     void                            onDialogAccepted();
     void                            onEditDialogAccepted();
     void                            handleRemoveTransactionDialog();
+    void                            UpdateSearchBox(const QString& newValue){ m_searchBoxContent = newValue;showTransactions(); }
 private:
     void                            showMenu();
     const int                       getSelectedTransactionIndexFromTable();
@@ -49,11 +50,13 @@ private:
     std::shared_ptr<la::Account>    m_accountPtr;
     QTableWidget                    *m_table;
     QHBoxLayout                     *m_layout;
+    QVBoxLayout                     *m_mainWidget;
     QVBoxLayout                     *m_sideBar;
     QVBoxLayout                     *m_buttonsLayout;
     QGroupBox                       *m_buttonGroupBox;
     QTabWidget                      *m_tabsWidget;
     QWidget                         *m_mainTab;
+    QLineEdit                       *m_searchBox;
     TableItems                      m_emptyTableItems;
     QLabel                          m_accountState;
     QPushButton                     *m_removeTransactionBtn;
@@ -64,6 +67,7 @@ private:
     QString                         m_jsonPath;
     QSettings                       *m_settings;
     bool                            m_splitByDays;
+    QString                         m_searchBoxContent;
 };
 
 }

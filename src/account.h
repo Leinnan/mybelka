@@ -25,6 +25,7 @@ public:
     QString                         getDeviceId() const;
     void                            setDeviceId(const QString &value);
     std::vector<la::Transaction>    getTransactions(){ return m_transactions; }
+    std::vector<la::Transaction>    getTransactionsContaining(const QString& text);
     int                             getBalance();
     const int                       getTransactionIndexByUid(const QUuid& uid);
     void                            replaceTransactionWithUid(const QUuid& uid, const la::Transaction& transaction);

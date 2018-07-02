@@ -134,6 +134,18 @@ void la::Account::setDeviceId(const QString &value)
     deviceId = value;
 }
 
+std::vector<la::Transaction> la::Account::getTransactionsContaining(const QString& text)
+{
+    std::vector<la::Transaction> result;
+    
+    for(const auto& transaction : m_transactions)
+    {
+        if(transaction.getTitle().contains(text, Qt::CaseInsensitive))
+            result.push_back(transaction);
+    }
+    return result;
+}
+
 int la::Account::getBalance()
 {
     updateAccountBalance();
