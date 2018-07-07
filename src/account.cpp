@@ -171,7 +171,7 @@ void la::Account::replaceTransactionWithUid(const QUuid &uid, const la::Transact
 
 void la::Account::removeTransaction(const int &index)
 {
-    m_transactions.erase(m_transactions.begin()+index-1);
+    m_transactions.erase(m_transactions.begin()+index);
 
     updateAccountBalance();
     sortTransactions();
